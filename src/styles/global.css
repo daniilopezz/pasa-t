@@ -1,0 +1,2253 @@
+:root {
+  color-scheme: dark;
+  --bg: #02030a;
+  --bg-soft: #080a18;
+  --panel: rgba(4, 8, 22, 0.78);
+  --panel-strong: rgba(2, 4, 13, 0.9);
+  --line: rgba(52, 224, 255, 0.34);
+  --line-bright: rgba(255, 65, 190, 0.72);
+  --cream: #effaff;
+  --muted: #9bb2d8;
+  --gold: #ff47c7;
+  --amber: #34e6ff;
+  --deep-orange: #792dff;
+  --cyan: #34e6ff;
+  --magenta: #ff47c7;
+  --down: #34e6ff;
+  --up: #ff47c7;
+  --danger: #ff3864;
+  --shadow: rgba(0, 0, 0, 0.45);
+  --font-display: Impact, "Arial Black", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Trebuchet MS", Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-price: "Arial Black", "DIN Condensed", "Arial Narrow", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-height: 100%;
+  background: var(--bg);
+}
+
+body {
+  min-height: 100%;
+  margin: 0;
+  color: var(--cream);
+  font-family: var(--font-body);
+  background: var(--bg);
+  letter-spacing: 0;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  position: fixed;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+}
+
+body::before {
+  z-index: -3;
+  background:
+    linear-gradient(90deg, rgba(2, 3, 10, 0.96), rgba(3, 6, 20, 0.66) 48%, rgba(18, 4, 27, 0.78)),
+    url("/public/background.jpg") center / cover no-repeat;
+}
+
+body::after {
+  z-index: -2;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    radial-gradient(circle at 24% 18%, rgba(52, 230, 255, 0.24), transparent 28rem),
+    radial-gradient(circle at 82% 20%, rgba(255, 71, 199, 0.22), transparent 30rem),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.82));
+  background-size: 100% 4px, auto, auto, auto;
+  mix-blend-mode: normal;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+noscript {
+  display: block;
+  padding: 1rem;
+  color: var(--cream);
+  background: #160f0b;
+}
+
+#app {
+  position: relative;
+  z-index: 1;
+  min-height: 100svh;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--cyan);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  text-shadow: 0 0 0.7rem rgba(52, 230, 255, 0.78);
+}
+
+.brand-logo {
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 0.7rem rgba(66, 220, 255, 0.42))
+    drop-shadow(0 0 1rem rgba(255, 77, 182, 0.32));
+}
+
+.brand-logo.large {
+  width: min(20rem, 58%);
+  margin: 0 auto 1rem;
+}
+
+.brand-logo.small {
+  width: 5.25rem;
+  height: 5.25rem;
+  flex: 0 0 auto;
+}
+
+.home-page {
+  min-height: 100svh;
+}
+
+.home-hero {
+  display: grid;
+  min-height: 84svh;
+  padding: 4rem 1.25rem 2rem;
+  place-items: center;
+  text-align: center;
+}
+
+.home-brand {
+  width: min(52rem, 100%);
+  min-width: 0;
+}
+
+.home-brand h1 {
+  margin: 0.2rem 0 1.45rem;
+  font-family: var(--font-display);
+  font-size: 5.4rem;
+  line-height: 0.92;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(255, 71, 199, 0.62);
+  text-shadow:
+    0.08em 0.08em 0 rgba(255, 71, 199, 0.42),
+    -0.05em -0.04em 0 rgba(52, 230, 255, 0.42),
+    0 0 1rem rgba(52, 230, 255, 0.48),
+    0 0 1.8rem rgba(255, 71, 199, 0.35),
+    0 1rem 3rem rgba(0, 0, 0, 0.68);
+}
+
+.home-lead {
+  max-width: 42rem;
+  margin: 0 auto 2rem;
+  color: #d8f6ff;
+  font-size: 1.28rem;
+  font-weight: 800;
+  line-height: 1.55;
+  text-shadow: 0 0 1rem rgba(52, 230, 255, 0.25);
+}
+
+.primary-link,
+.control-button {
+  display: inline-flex;
+  min-height: 3.25rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.58rem;
+  border: 1px solid var(--line-bright);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 900;
+  text-transform: uppercase;
+  transition:
+    transform 160ms ease,
+    border-color 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease,
+    opacity 160ms ease;
+}
+
+.primary-link {
+  padding: 0.95rem 1.5rem;
+  color: #02030a;
+  background: linear-gradient(135deg, #35eaff, #ff47c7 72%, #8a4dff);
+  box-shadow:
+    0 0 1.2rem rgba(52, 230, 255, 0.48),
+    0 0 2.2rem rgba(255, 71, 199, 0.36),
+    0 1rem 2.5rem rgba(0, 0, 0, 0.42);
+}
+
+.primary-link:hover,
+.control-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.primary-link:focus-visible,
+.control-button:focus-visible {
+  outline: 3px solid rgba(66, 220, 255, 0.68);
+  outline-offset: 3px;
+}
+
+.home-preview {
+  display: grid;
+  grid-template-columns: repeat(8, auto);
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem 1rem;
+  min-height: 16svh;
+  padding: 1.4rem 1rem 2.2rem;
+  border-top: 1px solid rgba(52, 230, 255, 0.32);
+  background: rgba(2, 4, 13, 0.68);
+  box-shadow: inset 0 1px 0 rgba(255, 71, 199, 0.25);
+  backdrop-filter: blur(14px);
+}
+
+.home-preview span {
+  color: var(--muted);
+  font-size: 0.92rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.home-preview strong {
+  color: var(--cyan);
+  font-family: var(--font-price);
+  font-size: 1.55rem;
+  text-shadow:
+    0 0 0.75rem rgba(52, 230, 255, 0.75),
+    0 0 1rem rgba(255, 71, 199, 0.45);
+}
+
+.market-page {
+  min-height: 100svh;
+  padding: 1.15rem;
+}
+
+.market-header {
+  display: grid;
+  grid-template-columns: minmax(18rem, 1.2fr) minmax(22rem, 1fr) minmax(17rem, auto);
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.85rem;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(52, 230, 255, 0.1), transparent 36%, rgba(255, 71, 199, 0.08)),
+    rgba(2, 4, 13, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(255, 71, 199, 0.12),
+    0 0 1.5rem rgba(52, 230, 255, 0.2),
+    0 1.25rem 3rem var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.brand-lockup {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.brand-lockup h1 {
+  margin: 0.05rem 0 0;
+  font-family: var(--font-display);
+  font-size: 2.65rem;
+  line-height: 0.95;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(52, 230, 255, 0.38);
+  text-shadow:
+    0.06em 0.06em 0 rgba(255, 71, 199, 0.42),
+    0 0 1rem rgba(52, 230, 255, 0.44);
+}
+
+.market-status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.status-pill {
+  display: inline-flex;
+  min-height: 2.2rem;
+  align-items: center;
+  border: 1px solid rgba(52, 230, 255, 0.26);
+  border-radius: 8px;
+  padding: 0.42rem 0.68rem;
+  color: var(--cream);
+  background: rgba(3, 7, 20, 0.72);
+  font-size: 0.84rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: inset 0 0 0.8rem rgba(52, 230, 255, 0.08);
+}
+
+.status-pill.live {
+  border-color: rgba(52, 230, 255, 0.72);
+  color: var(--cyan);
+  background: rgba(66, 220, 255, 0.08);
+  text-shadow: 0 0 0.75rem rgba(52, 230, 255, 0.72);
+}
+
+.status-pill.idle,
+.status-pill.muted {
+  color: var(--muted);
+}
+
+.status-pill.warm {
+  border-color: rgba(255, 71, 199, 0.5);
+  color: var(--magenta);
+  background: rgba(255, 71, 199, 0.1);
+  text-shadow: 0 0 0.75rem rgba(255, 71, 199, 0.58);
+}
+
+.status-pill.golden {
+  border-color: rgba(255, 71, 199, 0.82);
+  color: #02030a;
+  background: linear-gradient(135deg, #35eaff, #ff47c7);
+}
+
+.header-countdowns {
+  justify-self: end;
+}
+
+.countdown {
+  min-width: 14.5rem;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 0.64rem 0.75rem;
+  background:
+    linear-gradient(180deg, rgba(52, 230, 255, 0.08), rgba(255, 71, 199, 0.04)),
+    rgba(0, 0, 0, 0.36);
+  box-shadow:
+    inset 0 0 1.25rem rgba(52, 230, 255, 0.09),
+    0 0 1rem rgba(255, 71, 199, 0.1);
+}
+
+.countdown-label,
+.countdown-detail {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.countdown-value {
+  display: block;
+  margin: 0.16rem 0;
+  color: var(--cream);
+  font-family: var(--font-price);
+  font-size: 2.1rem;
+  line-height: 1;
+  text-shadow:
+    0 0 0.7rem rgba(52, 230, 255, 0.62),
+    0 0 1rem rgba(255, 71, 199, 0.32);
+}
+
+.countdown-active .countdown-value {
+  color: var(--cyan);
+}
+
+.countdown-paused .countdown-value {
+  color: var(--magenta);
+}
+
+.control-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(10rem, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.control-button {
+  min-width: 0;
+  padding: 0.82rem 0.95rem;
+  color: var(--cream);
+  background: rgba(2, 5, 16, 0.82);
+  box-shadow:
+    inset 0 0 1rem rgba(52, 230, 255, 0.08),
+    0 0 1.15rem rgba(52, 230, 255, 0.18),
+    0 1rem 2.2rem rgba(0, 0, 0, 0.28);
+  text-shadow: 0 0 0.65rem currentColor;
+}
+
+.control-button .icon {
+  display: inline-grid;
+  width: 1.45rem;
+  height: 1.45rem;
+  place-items: center;
+  color: currentColor;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.control-button.primary {
+  color: #02030a;
+  background: linear-gradient(135deg, #35eaff, #ff47c7);
+}
+
+.control-button.danger {
+  border-color: rgba(255, 56, 100, 0.72);
+  color: #ffd9e4;
+  background: linear-gradient(135deg, rgba(90, 12, 45, 0.95), rgba(255, 56, 100, 0.82));
+}
+
+.control-button.golden {
+  border-color: rgba(255, 71, 199, 0.84);
+  color: #02030a;
+  background: linear-gradient(135deg, #ff47c7, #35eaff 74%, #8a4dff);
+}
+
+.control-button.ghost {
+  border-color: rgba(52, 230, 255, 0.52);
+  color: #dff7ff;
+  background: rgba(2, 8, 20, 0.74);
+}
+
+.control-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.drink-board {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+}
+
+.drink-category {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(52, 230, 255, 0.09), rgba(255, 71, 199, 0.04) 42%, rgba(2, 4, 13, 0.88)),
+    var(--panel);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 71, 199, 0.08),
+    0 0 1.2rem rgba(52, 230, 255, 0.18),
+    0 1.2rem 2.4rem rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(18px);
+}
+
+.category-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.95rem 1rem 0.72rem;
+  border-bottom: 1px solid rgba(255, 71, 199, 0.3);
+  background:
+    linear-gradient(90deg, rgba(52, 230, 255, 0.14), rgba(255, 71, 199, 0.12)),
+    rgba(0, 0, 0, 0.2);
+}
+
+.category-heading h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 2.15rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--cream);
+  -webkit-text-stroke: 1px rgba(255, 71, 199, 0.28);
+  text-shadow:
+    0.05em 0.05em 0 rgba(255, 71, 199, 0.38),
+    0 0 1rem rgba(52, 230, 255, 0.42);
+}
+
+.category-heading span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.drink-list {
+  display: grid;
+}
+
+.drink-row {
+  display: grid;
+  grid-template-columns: minmax(4.8rem, 1fr) minmax(5.8rem, auto) minmax(3.6rem, auto);
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 5.35rem;
+  padding: 0.72rem 0.85rem;
+  border-bottom: 1px solid rgba(52, 230, 255, 0.16);
+  background:
+    linear-gradient(90deg, rgba(52, 230, 255, 0.08), rgba(255, 71, 199, 0.04), rgba(52, 230, 255, 0)),
+    rgba(0, 0, 0, 0.1);
+  transition:
+    background 220ms ease,
+    transform 220ms ease,
+    border-color 220ms ease;
+}
+
+.drink-row:last-child {
+  border-bottom: 0;
+}
+
+.drink-row:hover {
+  background:
+    linear-gradient(90deg, rgba(52, 230, 255, 0.18), rgba(255, 71, 199, 0.12)),
+    rgba(0, 0, 0, 0.16);
+}
+
+.drink-copy {
+  min-width: 0;
+}
+
+.drink-copy h3 {
+  margin: 0 0 0.24rem;
+  color: #f5fbff;
+  font-size: 1.18rem;
+  font-weight: 900;
+  line-height: 1.08;
+  text-shadow: 0 0 0.7rem rgba(52, 230, 255, 0.3);
+}
+
+.drink-copy span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.price-stack {
+  min-width: 5.8rem;
+  text-align: right;
+}
+
+.drink-price {
+  display: inline-block;
+  color: var(--cream);
+  font-family: var(--font-price);
+  font-size: 2.68rem;
+  line-height: 0.9;
+  -webkit-text-stroke: 1px rgba(255, 71, 199, 0.18);
+  text-shadow:
+    0.04em 0.04em 0 rgba(255, 71, 199, 0.36),
+    0 0 0.85rem rgba(52, 230, 255, 0.62),
+    0 0 1.6rem rgba(255, 71, 199, 0.3);
+}
+
+.movement-badge {
+  display: grid;
+  width: 3.55rem;
+  min-height: 3.55rem;
+  place-items: center;
+  border: 1px solid rgba(52, 230, 255, 0.24);
+  border-radius: 8px;
+  background: rgba(2, 5, 16, 0.66);
+  box-shadow: inset 0 0 1rem rgba(255, 71, 199, 0.08);
+}
+
+.movement-badge span {
+  color: var(--muted);
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.movement-badge small {
+  color: var(--muted);
+  font-size: 0.62rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.movement-up {
+  border-left: 3px solid var(--up);
+}
+
+.movement-up .drink-price,
+.movement-up .movement-badge span,
+.movement-up .movement-badge small {
+  color: var(--up);
+}
+
+.movement-down {
+  border-left: 3px solid var(--down);
+}
+
+.movement-down .drink-price,
+.movement-down .movement-badge span,
+.movement-down .movement-badge small {
+  color: var(--down);
+}
+
+.movement-same {
+  border-left: 3px solid rgba(155, 178, 216, 0.26);
+}
+
+.golden-price {
+  background:
+    linear-gradient(90deg, rgba(255, 71, 199, 0.2), rgba(52, 230, 255, 0.13)),
+    rgba(0, 0, 0, 0.1);
+}
+
+.golden-price .drink-price {
+  color: #ffffff;
+}
+
+.golden-banner {
+  position: relative;
+  display: grid;
+  min-height: 8.4rem;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+  margin-bottom: 0.85rem;
+  border: 1px solid rgba(52, 230, 255, 0.82);
+  border-radius: 8px;
+  padding: 1rem;
+  color: #ffffff;
+  text-align: center;
+  background:
+    linear-gradient(120deg, rgba(52, 230, 255, 0.9), rgba(138, 77, 255, 0.96) 45%, rgba(255, 71, 199, 0.94)),
+    #050816;
+  box-shadow:
+    0 0 2rem rgba(52, 230, 255, 0.45),
+    0 0 3rem rgba(255, 71, 199, 0.34),
+    0 1.2rem 3rem rgba(0, 0, 0, 0.4);
+}
+
+.golden-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.42), transparent);
+  animation: golden-sheen 2.4s linear infinite;
+}
+
+.golden-banner p,
+.golden-banner strong,
+.golden-banner span {
+  position: relative;
+  z-index: 1;
+}
+
+.golden-banner p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 4.2rem;
+  line-height: 0.92;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(2, 3, 10, 0.54);
+  text-shadow:
+    0.06em 0.06em 0 rgba(2, 3, 10, 0.42),
+    0 0 1.2rem rgba(255, 255, 255, 0.55);
+}
+
+.golden-banner strong {
+  margin-top: 0.2rem;
+  font-size: 1.35rem;
+  text-transform: uppercase;
+}
+
+.golden-banner span {
+  font-family: var(--font-price);
+  font-size: 2.1rem;
+}
+
+.is-golden-mode::after {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    radial-gradient(circle at 50% 15%, rgba(255, 71, 199, 0.34), transparent 28rem),
+    radial-gradient(circle at 28% 18%, rgba(52, 230, 255, 0.28), transparent 24rem),
+    linear-gradient(180deg, rgba(5, 10, 30, 0.08), rgba(0, 0, 0, 0.82));
+  background-size: 100% 4px, auto, auto, auto;
+}
+
+:fullscreen .market-page {
+  padding: 0.85rem;
+}
+
+:fullscreen .control-panel {
+  opacity: 0.78;
+}
+
+@keyframes golden-sheen {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@media (min-width: 1500px) {
+  .market-page {
+    padding: 1.35rem;
+  }
+
+  .brand-lockup h1 {
+    font-size: 3.2rem;
+  }
+
+  .drink-price {
+    font-size: 3.15rem;
+  }
+
+  .drink-row {
+    min-height: 6.1rem;
+  }
+
+  .drink-copy h3 {
+    font-size: 1.36rem;
+  }
+}
+
+@media (max-width: 1220px) {
+  .market-header {
+    grid-template-columns: 1fr;
+  }
+
+  .market-status,
+  .header-countdowns {
+    justify-self: stretch;
+  }
+
+  .header-countdowns .countdown {
+    width: 100%;
+  }
+
+  .drink-board {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .home-hero {
+    min-height: 82svh;
+    padding-top: 2rem;
+  }
+
+  .home-brand h1 {
+    font-size: 2.35rem;
+  }
+
+  .home-lead {
+    max-width: 18.5rem;
+    font-size: 1.02rem;
+    overflow-wrap: break-word;
+  }
+
+  .home-preview {
+    grid-template-columns: 1fr auto;
+    width: min(18.5rem, 100%);
+    margin: 0 auto;
+    justify-content: stretch;
+  }
+
+  .market-page {
+    padding: 0.65rem;
+  }
+
+  .brand-lockup {
+    align-items: flex-start;
+  }
+
+  .brand-logo.small {
+    width: 4rem;
+    height: 4rem;
+  }
+
+  .brand-lockup h1 {
+    font-size: 2rem;
+  }
+
+  .control-panel,
+  .drink-board {
+    grid-template-columns: 1fr;
+  }
+
+  .drink-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .movement-badge {
+    grid-column: 1 / -1;
+    width: auto;
+    min-height: 2.4rem;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+
+  .drink-price {
+    font-size: 2.2rem;
+  }
+
+  .golden-banner p {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 430px) {
+  .home-brand {
+    width: min(18.5rem, 100%);
+  }
+
+  .home-brand h1 {
+    font-size: 2.05rem;
+  }
+
+  .brand-logo.large {
+    width: min(18rem, 82%);
+  }
+
+  .primary-link {
+    width: min(18rem, 100%);
+  }
+
+  .home-lead,
+  .home-preview {
+    width: min(16.75rem, 100%);
+    max-width: 16.75rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Arcade reference style: marcador violeta/azul como la pantalla aportada. */
+body.market-body::before,
+body.home-body::before {
+  background:
+    linear-gradient(180deg, rgba(4, 3, 42, 0.18), rgba(5, 0, 28, 0.3)),
+    url("/public/background.jpg") center / cover no-repeat;
+}
+
+body.market-body::after,
+body.home-body::after {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 18% 22%, rgba(47, 231, 255, 0.2), transparent 26rem),
+    radial-gradient(circle at 84% 72%, rgba(255, 85, 216, 0.2), transparent 28rem),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.18));
+  background-size: 100% 5px, auto, auto, auto;
+}
+
+.arcade-page {
+  display: grid;
+  min-height: 100svh;
+  padding: 1.2rem;
+  background: #04000f;
+}
+
+.arcade-screen {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  min-height: calc(100svh - 7.7rem);
+  overflow: hidden;
+  border: 7px solid rgba(7, 3, 24, 0.92);
+  border-radius: 8px;
+  padding: 1.15rem 1.35rem 1rem;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    radial-gradient(circle at 50% 35%, rgba(89, 54, 255, 0.42), transparent 32rem),
+    linear-gradient(135deg, #1a00b6 0%, #2100d6 42%, #3100a8 100%);
+  background-size: 100% 5px, auto, auto;
+  box-shadow:
+    inset 0 0 0 2px rgba(55, 221, 255, 0.55),
+    inset 0 0 3.5rem rgba(255, 65, 207, 0.2),
+    0 0 2.4rem rgba(42, 224, 255, 0.28),
+    0 1.4rem 3rem rgba(0, 0, 0, 0.72);
+}
+
+.arcade-screen::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255, 76, 214, 0.13), transparent 16%, transparent 84%, rgba(46, 228, 255, 0.12)),
+    radial-gradient(circle at center, transparent 44%, rgba(2, 0, 36, 0.26));
+}
+
+.arcade-topline {
+  display: none;
+  position: relative;
+  z-index: 1;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 0.35rem;
+}
+
+.arcade-logo {
+  width: 3.1rem;
+  height: 3.1rem;
+  object-fit: contain;
+  filter:
+    drop-shadow(0 0 0.45rem rgba(53, 235, 255, 0.85))
+    drop-shadow(0 0 0.65rem rgba(255, 74, 211, 0.75));
+}
+
+.arcade-title {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: 0.7rem;
+}
+
+.arcade-title span,
+.arcade-status,
+.arcade-footer-brand,
+.arcade-marquee,
+.control-button,
+.arcade-schedule {
+  font-family: var(--font-display);
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.arcade-title span {
+  color: #ffffff;
+  font-size: 1.05rem;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.9rem rgba(53, 235, 255, 0.9);
+}
+
+.arcade-title strong {
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.2vw, 3.65rem);
+  line-height: 0.9;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
+  text-shadow:
+    0.075em 0.075em 0 #ff4dd5,
+    0 0 0.7rem rgba(53, 235, 255, 0.9),
+    0 0 1.4rem rgba(255, 74, 211, 0.65);
+}
+
+.arcade-status {
+  color: #ffe8ff;
+  font-size: clamp(0.9rem, 1.35vw, 1.25rem);
+  text-align: right;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.8rem rgba(53, 235, 255, 0.72);
+}
+
+.market-body .drink-board {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: clamp(1rem, 4vw, 5.2rem);
+  align-content: start;
+  padding: 0.4rem 1.3rem 0.25rem;
+}
+
+.arcade-golden-panel {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  min-height: clamp(5.6rem, 10vw, 8.2rem);
+  margin: 0 0 clamp(0.5rem, 1.2vw, 1rem);
+  border: 4px solid #fff6bb;
+  border-radius: 4px;
+  padding: clamp(0.45rem, 1vw, 0.85rem);
+  color: #ffe17a;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(111, 59, 0, 0.96), rgba(80, 38, 0, 0.9));
+  background-size: 100% 5px, auto;
+  box-shadow:
+    0.2rem 0.2rem 0 #b16b00,
+    inset 0 0 2.4rem rgba(255, 226, 116, 0.18),
+    0 0 1.4rem rgba(255, 226, 116, 0.75);
+  text-align: center;
+}
+
+.arcade-golden-panel strong,
+.arcade-golden-panel span,
+.arcade-golden-panel em {
+  display: block;
+  font-family: var(--font-display);
+  font-style: normal;
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow:
+    0.07em 0.07em 0 #6f3b00,
+    0 0 0.8rem rgba(255, 226, 116, 0.95),
+    0 0 1.45rem rgba(255, 177, 36, 0.72);
+}
+
+.arcade-golden-panel strong {
+  font-size: clamp(2.2rem, 6vw, 6.2rem);
+}
+
+.arcade-golden-panel span {
+  margin-top: 0.18rem;
+  font-size: clamp(0.85rem, 1.7vw, 1.8rem);
+}
+
+.arcade-golden-panel em {
+  margin-top: 0.18rem;
+  font-size: clamp(1rem, 2.2vw, 2.35rem);
+  text-transform: none;
+}
+
+.arcade-golden-panel.golden-pending {
+  border-color: #fff6bb;
+  color: #ffe17a;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(111, 59, 0, 0.96), rgba(80, 38, 0, 0.92));
+  background-size: 100% 5px, auto;
+  box-shadow:
+    0.2rem 0.2rem 0 #b16b00,
+    inset 0 0 2.4rem rgba(255, 226, 116, 0.18),
+    0 0 1.4rem rgba(255, 226, 116, 0.75);
+}
+
+.arcade-golden-panel.golden-pending strong,
+.arcade-golden-panel.golden-pending span {
+  color: #ffe17a;
+  text-shadow:
+    0.07em 0.07em 0 #6f3b00,
+    0 0 0.8rem rgba(255, 226, 116, 0.95),
+    0 0 1.45rem rgba(255, 177, 36, 0.72);
+}
+
+.arcade-board-column {
+  display: grid;
+  align-content: start;
+  gap: clamp(0.45rem, 1.4vw, 1rem);
+}
+
+.market-body .drink-category {
+  overflow: visible;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+}
+
+.market-body .category-heading {
+  display: block;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.market-body .category-heading h2 {
+  margin: 0 0 0.12em;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 4.4rem);
+  line-height: 0.78;
+  text-transform: uppercase;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.58);
+  text-shadow:
+    0.075em 0.075em 0 #ff4dd5,
+    0 0 0.55rem rgba(53, 235, 255, 0.98),
+    0 0 1.1rem rgba(255, 74, 211, 0.6);
+}
+
+.market-body .drink-list {
+  display: grid;
+  gap: 0.05rem;
+}
+
+.market-body .drink-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: clamp(0.45rem, 1vw, 0.85rem);
+  min-height: 0;
+  padding: 0.02rem 0;
+  border: 0;
+  background: transparent;
+  transition: none;
+}
+
+.market-body .drink-row:hover {
+  background: transparent;
+}
+
+.market-body .drink-name {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(1.08rem, 2vw, 2.15rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-overflow: ellipsis;
+  text-transform: none;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.4px rgba(255, 255, 255, 0.48);
+  text-shadow:
+    0.075em 0.075em 0 #ff4dd5,
+    0 0 0.5rem rgba(53, 235, 255, 0.76);
+}
+
+.market-body .price-stack {
+  min-width: clamp(5.6rem, 10vw, 10.6rem);
+  text-align: right;
+}
+
+.market-body .drink-price {
+  color: #fff7ff;
+  font-family: var(--font-display);
+  font-size: clamp(1.16rem, 2vw, 2.25rem);
+  font-weight: 900;
+  line-height: 0.86;
+  -webkit-text-stroke: 0.5px rgba(255, 255, 255, 0.6);
+  text-shadow:
+    0.07em 0.07em 0 #ff4dd5,
+    0 0 0.6rem rgba(53, 235, 255, 0.92);
+  white-space: nowrap;
+}
+
+.market-body .movement-badge {
+  display: block;
+  width: auto;
+  min-height: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.market-body .movement-badge span {
+  display: block;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 1.8vw, 2rem);
+  line-height: 0.75;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.55rem rgba(53, 235, 255, 0.92);
+}
+
+.market-body .movement-up,
+.market-body .movement-down,
+.market-body .movement-same {
+  border-left: 0;
+}
+
+.market-body .movement-up .drink-price,
+.market-body .movement-up .movement-badge span,
+.market-body .movement-down .drink-price,
+.market-body .movement-down .movement-badge span,
+.market-body .movement-same .drink-price,
+.market-body .movement-same .movement-badge span {
+  color: #ffffff;
+}
+
+.arcade-footer {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(9rem, 0.85fr) minmax(26rem, 1.15fr) minmax(17rem, 17rem);
+  align-items: end;
+  gap: 1rem;
+  padding: 0.45rem 0.65rem 0;
+}
+
+.arcade-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-size: clamp(0.85rem, 1.3vw, 1.2rem);
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.7rem rgba(53, 235, 255, 0.85);
+}
+
+.arcade-footer-brand img {
+  width: clamp(2.6rem, 5vw, 4.8rem);
+  filter: drop-shadow(0 0 0.55rem rgba(255, 74, 211, 0.82));
+}
+
+.arcade-marquee {
+  align-self: end;
+  justify-self: center;
+  width: min(100%, 34rem);
+  min-height: 3.2rem;
+  color: #ffffff;
+  font-size: clamp(0.85rem, 1.4vw, 1.35rem);
+  text-align: center;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.7rem rgba(53, 235, 255, 0.8);
+}
+
+.arcade-marquee strong,
+.arcade-marquee span {
+  display: block;
+}
+
+.arcade-marquee span {
+  margin-top: 0.15rem;
+  font-size: 0.82em;
+}
+
+.arcade-clock {
+  display: grid;
+  justify-items: end;
+  width: 100%;
+  color: #ffe1f7;
+  text-align: right;
+}
+
+.arcade-clock span {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.7rem rgba(53, 235, 255, 0.8);
+}
+
+.arcade-clock strong {
+  display: block;
+  min-width: 5ch;
+  font-family: var(--font-display);
+  font-size: clamp(3.2rem, 7.2vw, 7.6rem);
+  font-variant-numeric: tabular-nums;
+  line-height: 0.78;
+  text-align: right;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.5);
+  text-shadow:
+    0.065em 0.065em 0 #ff4dd5,
+    0 0 0.9rem rgba(255, 255, 255, 0.82),
+    0 0 1.6rem rgba(53, 235, 255, 0.8);
+}
+
+.arcade-controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.7rem;
+}
+
+.arcade-controls .control-panel {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(8.2rem, 1fr));
+  gap: 0.55rem;
+  margin: 0;
+}
+
+.arcade-controls .control-button {
+  min-height: 2.65rem;
+  border: 2px solid #36eaff;
+  border-radius: 4px;
+  padding: 0.58rem 0.7rem;
+  color: #ffffff;
+  background: #1c00b7;
+  box-shadow:
+    inset 0 0 1rem rgba(255, 76, 214, 0.26),
+    0.15rem 0.15rem 0 #ff4dd5,
+    0 0 0.8rem rgba(53, 235, 255, 0.56);
+  font-size: 0.9rem;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.45rem rgba(53, 235, 255, 0.82);
+}
+
+.arcade-controls .control-button.primary,
+.arcade-controls .control-button.golden {
+  color: #ffffff;
+  background: #2610d8;
+}
+
+.arcade-controls .control-button.danger {
+  background: #4a0870;
+}
+
+.arcade-controls .control-button:disabled {
+  opacity: 0.42;
+}
+
+.arcade-schedule {
+  color: #ffffff;
+  font-size: 0.86rem;
+  text-align: right;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.55rem rgba(53, 235, 255, 0.78);
+}
+
+.is-tv-fullscreen .arcade-controls,
+:fullscreen .arcade-controls,
+:-webkit-full-screen .arcade-controls {
+  display: none;
+}
+
+.is-tv-fullscreen .arcade-page,
+:fullscreen .arcade-page,
+:-webkit-full-screen .arcade-page {
+  min-height: 100vh;
+  padding: 0;
+  background: #030014;
+}
+
+.is-tv-fullscreen .arcade-screen,
+:fullscreen .arcade-screen,
+:-webkit-full-screen .arcade-screen {
+  width: 100vw;
+  min-height: 100vh;
+  height: 100vh;
+  border: 0;
+  border-radius: 0;
+  padding: clamp(1rem, 2.4vw, 2rem);
+  box-shadow:
+    inset 0 0 0 3px rgba(53, 235, 255, 0.52),
+    inset 0 0 4.4rem rgba(255, 65, 207, 0.22);
+}
+
+.is-tv-fullscreen .drink-board,
+:fullscreen .drink-board,
+:-webkit-full-screen .drink-board {
+  padding-top: clamp(0.8rem, 2vw, 1.6rem);
+}
+
+.home-body .home-page {
+  display: grid;
+  min-height: 100svh;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(135deg, rgba(28, 0, 182, 0.82), rgba(49, 0, 168, 0.9));
+  background-size: 100% 5px, auto;
+}
+
+.home-body .home-brand h1,
+.home-body .home-lead,
+.home-body .home-preview,
+.home-body .primary-link {
+  font-family: var(--font-display);
+}
+
+.home-body .home-brand h1 {
+  color: #ffffff;
+  text-shadow:
+    0.075em 0.075em 0 #ff4dd5,
+    0 0 0.75rem rgba(53, 235, 255, 0.9),
+    0 0 1.4rem rgba(255, 74, 211, 0.65);
+}
+
+.home-body .home-lead {
+  color: #ffffff;
+  text-transform: uppercase;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.55rem rgba(53, 235, 255, 0.86);
+}
+
+.home-body .primary-link {
+  border: 3px solid #ffffff;
+  border-radius: 4px;
+  color: #ffffff;
+  background: #2400ca;
+  box-shadow:
+    0.22rem 0.22rem 0 #ff4dd5,
+    0 0 1rem rgba(53, 235, 255, 0.9);
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.5rem rgba(53, 235, 255, 0.85);
+}
+
+@media (max-width: 920px) {
+  .arcade-page {
+    padding: 0.75rem;
+  }
+
+  .arcade-screen {
+    min-height: auto;
+    padding: 0.9rem;
+  }
+
+  .arcade-topline,
+  .arcade-footer,
+  .arcade-controls {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+
+  .arcade-status,
+  .arcade-clock,
+  .arcade-clock strong,
+  .arcade-schedule {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .market-body .drink-board {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+  }
+
+  .arcade-controls .control-panel {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 520px) {
+  .market-body .drink-row {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+  }
+
+  .market-body .drink-name {
+    font-size: 1rem;
+  }
+
+  .market-body .drink-price {
+    font-size: 1rem;
+  }
+
+  .market-body .price-stack {
+    min-width: 5rem;
+  }
+
+  .arcade-title {
+    display: grid;
+    gap: 0.1rem;
+  }
+}
+
+/* Colores finales de mercado: verde sube, rojo baja, blanco estable. */
+.market-body .movement-up .drink-price,
+.market-body .movement-up .movement-badge span {
+  color: #39ff6a;
+  -webkit-text-stroke-color: rgba(210, 255, 222, 0.75);
+  text-shadow:
+    0.07em 0.07em 0 #074d1e,
+    0 0 0.65rem rgba(57, 255, 106, 0.95),
+    0 0 1.3rem rgba(57, 255, 106, 0.55);
+}
+
+.market-body .movement-down .drink-price,
+.market-body .movement-down .movement-badge span {
+  color: #ff244d;
+  -webkit-text-stroke-color: rgba(255, 210, 220, 0.75);
+  text-shadow:
+    0.07em 0.07em 0 #5b0012,
+    0 0 0.65rem rgba(255, 36, 77, 0.95),
+    0 0 1.3rem rgba(255, 36, 77, 0.55);
+}
+
+.market-body .movement-same .drink-price,
+.market-body .movement-same .movement-badge span {
+  color: #ffffff;
+  -webkit-text-stroke-color: rgba(255, 255, 255, 0.72);
+  text-shadow:
+    0.07em 0.07em 0 #ff4dd5,
+    0 0 0.65rem rgba(255, 255, 255, 0.92),
+    0 0 1.2rem rgba(53, 235, 255, 0.65);
+}
+
+/* Golden Time: el marcador completo pasa a modo oro. */
+.market-body.is-golden-mode .arcade-screen {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 50% 38%, rgba(255, 232, 130, 0.46), transparent 32rem),
+    linear-gradient(135deg, #6c3b00 0%, #b16b00 45%, #3b2100 100%);
+  background-size: 100% 5px, auto, auto;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 238, 150, 0.74),
+    inset 0 0 4.4rem rgba(255, 177, 36, 0.36),
+    0 0 2.3rem rgba(255, 212, 90, 0.55),
+    0 1.4rem 3rem rgba(0, 0, 0, 0.72);
+}
+
+.market-body.is-golden-mode .arcade-screen::before {
+  background:
+    linear-gradient(90deg, rgba(255, 244, 174, 0.16), transparent 18%, transparent 82%, rgba(255, 179, 35, 0.18)),
+    radial-gradient(circle at center, transparent 42%, rgba(38, 19, 0, 0.3));
+}
+
+.market-body.is-golden-mode .category-heading h2,
+.market-body.is-golden-mode .drink-name,
+.market-body.is-golden-mode .drink-price,
+.market-body.is-golden-mode .movement-badge span,
+.market-body.is-golden-mode .arcade-footer-brand,
+.market-body.is-golden-mode .arcade-marquee,
+.market-body.is-golden-mode .arcade-clock,
+.market-body.is-golden-mode .arcade-clock span,
+.market-body.is-golden-mode .arcade-clock strong,
+.market-body.is-golden-mode .arcade-golden-panel,
+.market-body.is-golden-mode .arcade-golden-panel strong,
+.market-body.is-golden-mode .arcade-golden-panel span,
+.market-body.is-golden-mode .arcade-golden-panel em {
+  color: #ffe17a;
+  -webkit-text-stroke-color: rgba(255, 255, 225, 0.78);
+  text-shadow:
+    0.07em 0.07em 0 #6f3b00,
+    0 0 0.8rem rgba(255, 226, 116, 0.95),
+    0 0 1.45rem rgba(255, 177, 36, 0.72);
+}
+
+.market-body.is-golden-mode .arcade-footer-brand img,
+.market-body.is-golden-mode .brand-logo,
+.market-body.is-golden-mode .arcade-logo {
+  filter:
+    drop-shadow(0 0 0.55rem rgba(255, 226, 116, 0.95))
+    drop-shadow(0 0 1rem rgba(255, 177, 36, 0.75));
+}
+
+/* Responsive final: evita desbordes en TV, escritorio, tablet y móvil. */
+.market-body {
+  overflow-x: hidden;
+}
+
+.market-body #app,
+.arcade-page,
+.arcade-screen,
+.market-body .drink-board,
+.arcade-board-column,
+.market-body .drink-category,
+.market-body .drink-list,
+.market-body .drink-row,
+.arcade-footer,
+.arcade-controls,
+.arcade-controls .control-panel {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.arcade-page {
+  width: 100%;
+  gap: clamp(0.55rem, 1vw, 0.85rem);
+}
+
+.arcade-screen {
+  width: 100%;
+  overflow: hidden;
+}
+
+.market-body .drink-board {
+  min-height: 0;
+}
+
+.market-body .drink-row {
+  width: 100%;
+}
+
+.market-body .drink-name,
+.market-body .drink-price,
+.market-body .movement-badge span,
+.arcade-marquee,
+.arcade-clock strong {
+  overflow-wrap: anywhere;
+}
+
+.arcade-schedule {
+  display: none;
+}
+
+@media (min-width: 921px) {
+  .arcade-page {
+    grid-template-rows: minmax(0, 1fr) auto;
+    height: 100svh;
+    overflow: hidden;
+    padding: clamp(0.8rem, 1.35vw, 1.35rem);
+  }
+
+  .arcade-screen {
+    min-height: 0;
+    height: 100%;
+    max-height: calc(100svh - 5.75rem);
+    padding: clamp(1.05rem, 1.9vw, 2rem);
+  }
+
+  .market-body .drink-board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4.6vw, 6.5rem);
+    padding: clamp(0.45rem, 1vw, 0.95rem) clamp(1.25rem, 2vw, 2.3rem) 0;
+  }
+
+  .arcade-board-column {
+    gap: clamp(0.45rem, 1.1vw, 1.1rem);
+  }
+
+  .market-body .category-heading h2 {
+    font-size: clamp(2.8rem, 3.45vw, 4.9rem);
+  }
+
+  .market-body .drink-name {
+    font-size: clamp(1.18rem, 1.6vw, 2.15rem);
+  }
+
+  .market-body .drink-price {
+    font-size: clamp(1.18rem, 1.6vw, 2.15rem);
+  }
+
+  .market-body .price-stack {
+    min-width: clamp(6.2rem, 8vw, 10rem);
+  }
+
+  .market-body .movement-badge span {
+    font-size: clamp(1rem, 1.45vw, 1.85rem);
+  }
+
+  .arcade-footer {
+    grid-template-columns: minmax(10rem, 0.72fr) minmax(18rem, 1fr) minmax(21rem, 25rem);
+    align-items: end;
+    gap: clamp(0.8rem, 1.6vw, 1.5rem);
+  }
+
+  .arcade-marquee {
+    width: min(100%, 30rem);
+  }
+
+  .arcade-clock strong {
+    min-width: 5.25ch;
+    font-size: clamp(4rem, 5.8vw, 6.6rem);
+  }
+
+  .arcade-controls {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1800px) {
+  .arcade-screen {
+    max-height: calc(100svh - 6.2rem);
+  }
+
+  .market-body .category-heading h2 {
+    font-size: clamp(3.6rem, 3.25vw, 5.4rem);
+  }
+
+  .market-body .drink-name,
+  .market-body .drink-price {
+    font-size: clamp(1.55rem, 1.45vw, 2.45rem);
+  }
+
+  .arcade-clock strong {
+    font-size: clamp(5rem, 5.2vw, 7rem);
+  }
+}
+
+@media (min-width: 921px) and (max-width: 1400px) {
+  .arcade-screen {
+    max-height: calc(100svh - 5.35rem);
+    padding: clamp(0.8rem, 1.55vw, 1.35rem);
+  }
+
+  .market-body .drink-board {
+    gap: clamp(1.7rem, 3.4vw, 3.6rem);
+  }
+
+  .arcade-footer {
+    grid-template-columns: minmax(8rem, 0.7fr) minmax(16rem, 1fr) minmax(17rem, 21rem);
+  }
+
+  .arcade-clock strong {
+    font-size: clamp(3.7rem, 5.6vw, 5.3rem);
+  }
+
+  .arcade-controls .control-button {
+    font-size: clamp(0.72rem, 0.95vw, 0.9rem);
+  }
+}
+
+@media (max-width: 920px) {
+  .arcade-page {
+    min-height: 100svh;
+    height: auto;
+    overflow-x: hidden;
+    padding: clamp(0.55rem, 2.4vw, 0.9rem);
+  }
+
+  .arcade-screen {
+    min-height: auto;
+    height: auto;
+    overflow: hidden;
+    padding: clamp(0.75rem, 2.8vw, 1.1rem);
+  }
+
+  .market-body .drink-board {
+    grid-template-columns: 1fr;
+    gap: clamp(0.65rem, 2.6vw, 1rem);
+    padding: clamp(0.6rem, 2vw, 0.95rem) 0 0;
+  }
+
+  .arcade-board-column {
+    gap: clamp(0.65rem, 2.4vw, 1rem);
+  }
+
+  .market-body .category-heading h2 {
+    font-size: clamp(2.15rem, 8.8vw, 3.25rem);
+  }
+
+  .market-body .drink-row {
+    grid-template-columns: minmax(0, 1fr) minmax(4.6rem, auto) 1.35rem;
+    gap: clamp(0.35rem, 2vw, 0.6rem);
+    align-items: baseline;
+    overflow: hidden;
+  }
+
+  .market-body .drink-name {
+    font-size: clamp(1rem, 4.6vw, 1.35rem);
+    line-height: 0.95;
+    white-space: normal;
+  }
+
+  .market-body .price-stack {
+    min-width: 4.6rem;
+    justify-self: end;
+  }
+
+  .market-body .drink-price {
+    font-size: clamp(1rem, 4.6vw, 1.35rem);
+  }
+
+  .market-body .movement-badge span {
+    font-size: clamp(0.9rem, 4vw, 1.2rem);
+  }
+
+  .market-body .movement-badge {
+    grid-column: auto;
+    justify-self: end;
+    width: auto;
+    min-height: 0;
+  }
+
+  .arcade-footer {
+    grid-template-columns: 1fr;
+    justify-items: stretch;
+    gap: 0.45rem;
+    padding: clamp(0.65rem, 2.4vw, 1rem) 0 0;
+  }
+
+  .arcade-footer-brand {
+    justify-content: flex-start;
+  }
+
+  .arcade-marquee {
+    justify-self: stretch;
+    width: 100%;
+    min-height: auto;
+    text-align: left;
+  }
+
+  .arcade-clock {
+    justify-items: start;
+    text-align: left;
+  }
+
+  .arcade-clock strong {
+    min-width: 0;
+    font-size: clamp(2.6rem, 16vw, 4.6rem);
+    text-align: left;
+  }
+
+  .arcade-golden-panel {
+    min-height: auto;
+    padding: clamp(0.55rem, 2.6vw, 0.85rem);
+  }
+
+  .arcade-golden-panel strong {
+    font-size: clamp(2rem, 11vw, 4rem);
+  }
+
+  .arcade-golden-panel span {
+    font-size: clamp(0.82rem, 4.4vw, 1.2rem);
+  }
+
+  .arcade-golden-panel em {
+    font-size: clamp(1rem, 5.2vw, 1.55rem);
+  }
+
+  .arcade-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .arcade-controls .control-panel {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  html,
+  body,
+  .market-body,
+  .market-body #app {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+
+  .arcade-page {
+    display: block;
+    padding: 0.45rem;
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: hidden;
+  }
+
+  .arcade-screen {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-width: 4px;
+    padding: 0.65rem;
+    overflow: hidden;
+  }
+
+  .market-body .drink-board {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    width: 100%;
+    max-width: 100%;
+    padding-top: 0.5rem;
+    overflow: hidden;
+  }
+
+  .arcade-board-column,
+  .market-body .drink-category,
+  .market-body .drink-list {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .market-body .drink-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 3.85rem 0.75rem !important;
+    gap: 0.22rem;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .market-body .drink-name,
+  .market-body .drink-price {
+    font-size: clamp(0.78rem, 3.65vw, 0.96rem);
+    line-height: 1;
+  }
+
+  .market-body .drink-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .market-body .price-stack {
+    min-width: 0;
+    width: 3.85rem;
+    justify-self: end;
+    text-align: right;
+  }
+
+  .market-body .movement-badge {
+    grid-column: auto;
+    justify-self: end;
+    width: 0.75rem;
+    overflow: hidden;
+  }
+
+  .market-body .movement-badge span {
+    font-size: clamp(0.72rem, 3.3vw, 0.9rem);
+  }
+
+  .arcade-footer-brand img {
+    width: 2.6rem;
+  }
+
+  .arcade-controls .control-button {
+    min-height: 2.45rem;
+    font-size: 0.78rem;
+  }
+}
+
+.is-tv-fullscreen .arcade-page,
+:fullscreen .arcade-page,
+:-webkit-full-screen .arcade-page {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr);
+  height: 100vh;
+  overflow: hidden;
+}
+
+.is-tv-fullscreen .arcade-screen,
+:fullscreen .arcade-screen,
+:-webkit-full-screen .arcade-screen {
+  display: grid;
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.is-tv-fullscreen .arcade-footer,
+:fullscreen .arcade-footer,
+:-webkit-full-screen .arcade-footer {
+  grid-template-columns: minmax(10rem, 0.7fr) minmax(18rem, 1fr) minmax(22rem, 26rem);
+}
+
+.is-tv-fullscreen .arcade-clock strong,
+:fullscreen .arcade-clock strong,
+:-webkit-full-screen .arcade-clock strong {
+  font-size: clamp(4.3rem, 6vw, 7.2rem);
+}
+
+/* Laptop/TV composition pass: fill the screen instead of leaving the board visually empty. */
+@media (min-width: 921px) {
+  .arcade-screen {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .market-body .drink-board {
+    flex: 1 1 auto;
+  }
+
+  .arcade-footer {
+    flex: 0 0 auto;
+    margin-top: auto;
+    padding-right: clamp(0.8rem, 1.4vw, 1.8rem);
+    padding-bottom: clamp(0.35rem, 0.9vw, 0.8rem);
+  }
+
+  .arcade-clock {
+    padding-right: clamp(0.4rem, 0.9vw, 1rem);
+  }
+}
+
+@media (min-width: 921px) and (max-width: 1500px) {
+  .arcade-screen {
+    padding: clamp(1rem, 1.75vw, 1.45rem) clamp(1.25rem, 2.1vw, 2rem);
+  }
+
+  .market-body .drink-board {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2.2rem, 4vw, 4.5rem);
+    padding: clamp(0.8rem, 1.6vw, 1.4rem) clamp(1.4rem, 2.3vw, 2.3rem) 0;
+  }
+
+  .arcade-board-column {
+    gap: clamp(0.75rem, 1.8vw, 1.35rem);
+  }
+
+  .market-body .category-heading h2 {
+    font-size: clamp(3.35rem, 4.7vw, 4.85rem);
+  }
+
+  .market-body .drink-row {
+    gap: clamp(0.65rem, 1.35vw, 1rem);
+  }
+
+  .market-body .drink-name,
+  .market-body .drink-price {
+    font-size: clamp(1.35rem, 2.15vw, 1.9rem);
+  }
+
+  .market-body .movement-badge span {
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+  }
+
+  .market-body .price-stack {
+    min-width: clamp(6.4rem, 8.6vw, 8.3rem);
+  }
+
+  .arcade-footer {
+    grid-template-columns: minmax(9rem, 0.75fr) minmax(18rem, 1fr) minmax(18.5rem, 22rem);
+  }
+
+  .arcade-footer-brand {
+    font-size: clamp(1rem, 1.55vw, 1.3rem);
+  }
+
+  .arcade-footer-brand img {
+    width: clamp(3.6rem, 6vw, 4.9rem);
+  }
+
+  .arcade-marquee {
+    font-size: clamp(1rem, 1.55vw, 1.35rem);
+  }
+
+  .arcade-clock strong {
+    font-size: clamp(4.6rem, 7vw, 6.2rem);
+  }
+}
+
+@media (min-width: 1501px) {
+  .arcade-footer {
+    grid-template-columns: minmax(12rem, 0.72fr) minmax(22rem, 1fr) minmax(24rem, 29rem);
+  }
+
+  .arcade-clock strong {
+    font-size: clamp(5.6rem, 5.5vw, 7.3rem);
+  }
+}
+
+/* Bottom-left brand: larger clean logo, no black backing. */
+.arcade-footer-brand {
+  align-items: center;
+  gap: clamp(0.75rem, 1.2vw, 1.35rem);
+  min-height: clamp(9rem, 13vw, 16rem);
+}
+
+.arcade-footer-brand img {
+  width: clamp(7rem, 9vw, 11rem);
+  background: transparent;
+  filter:
+    drop-shadow(0 0 0.55rem rgba(255, 255, 255, 0.95))
+    drop-shadow(0 0 1rem rgba(53, 235, 255, 1))
+    drop-shadow(0 0 1.65rem rgba(255, 74, 211, 0.95))
+    drop-shadow(0 0 2.3rem rgba(53, 235, 255, 0.55));
+}
+
+.arcade-footer-brand span {
+  color: #ffffff;
+  font-size: clamp(1.35rem, 2.05vw, 2.15rem);
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.85rem rgba(53, 235, 255, 1),
+    0 0 1.35rem rgba(255, 74, 211, 0.8);
+}
+
+@media (max-width: 920px) {
+  .arcade-footer-brand img {
+    width: clamp(5.8rem, 18vw, 7.2rem);
+  }
+}
+
+@media (max-width: 480px) {
+  .arcade-footer-brand img {
+    width: 4.8rem;
+  }
+
+  .arcade-footer-brand span {
+    font-size: 1.05rem;
+  }
+}
+
+/* Fullscreen/TV fill mode: use the whole panel, keep the footer at the bottom. */
+.is-tv-fullscreen .arcade-page,
+:fullscreen .arcade-page,
+:-webkit-full-screen .arcade-page {
+  display: block !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #1400a8;
+}
+
+.is-tv-fullscreen .arcade-screen,
+:fullscreen .arcade-screen,
+:-webkit-full-screen .arcade-screen {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  min-height: 100vh !important;
+  max-height: 100vh !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding: clamp(1.2rem, 2vw, 2.4rem) clamp(2.2rem, 3vw, 4rem) clamp(1rem, 1.5vw, 1.8rem) !important;
+  overflow: hidden !important;
+}
+
+.is-tv-fullscreen .drink-board,
+:fullscreen .drink-board,
+:-webkit-full-screen .drink-board {
+  flex: 1 1 auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  gap: clamp(4.5rem, 8vw, 10rem) !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  padding: clamp(1rem, 2vw, 2.4rem) clamp(1.2rem, 2vw, 2.8rem) 0 !important;
+  align-content: start !important;
+}
+
+.is-tv-fullscreen .arcade-board-column,
+:fullscreen .arcade-board-column,
+:-webkit-full-screen .arcade-board-column {
+  display: grid !important;
+  grid-template-rows: auto auto !important;
+  align-content: start !important;
+  gap: clamp(1.5rem, 3.2vw, 4rem) !important;
+}
+
+.is-tv-fullscreen .category-heading h2,
+:fullscreen .category-heading h2,
+:-webkit-full-screen .category-heading h2 {
+  font-size: clamp(4.8rem, 6.2vw, 8.4rem) !important;
+  line-height: 0.78 !important;
+  margin-bottom: 0.12em !important;
+}
+
+.is-tv-fullscreen .drink-row,
+:fullscreen .drink-row,
+:-webkit-full-screen .drink-row {
+  grid-template-columns: minmax(0, 1fr) minmax(9rem, 13rem) minmax(2rem, 2.5rem) !important;
+  gap: clamp(0.9rem, 1.35vw, 1.8rem) !important;
+  align-items: baseline !important;
+}
+
+.is-tv-fullscreen .drink-name,
+.is-tv-fullscreen .drink-price,
+:fullscreen .drink-name,
+:fullscreen .drink-price,
+:-webkit-full-screen .drink-name,
+:-webkit-full-screen .drink-price {
+  font-size: clamp(2rem, 2.55vw, 3.35rem) !important;
+  line-height: 0.95 !important;
+}
+
+.is-tv-fullscreen .movement-badge span,
+:fullscreen .movement-badge span,
+:-webkit-full-screen .movement-badge span {
+  font-size: clamp(1.8rem, 2.2vw, 3rem) !important;
+}
+
+.is-tv-fullscreen .price-stack,
+:fullscreen .price-stack,
+:-webkit-full-screen .price-stack {
+  min-width: 9rem !important;
+  width: auto !important;
+}
+
+.is-tv-fullscreen .arcade-golden-panel,
+:fullscreen .arcade-golden-panel,
+:-webkit-full-screen .arcade-golden-panel {
+  flex: 0 0 auto !important;
+  min-height: clamp(5.4rem, 8vw, 9rem) !important;
+  margin-bottom: clamp(0.6rem, 1.2vw, 1.4rem) !important;
+}
+
+.is-tv-fullscreen .arcade-golden-panel strong,
+:fullscreen .arcade-golden-panel strong,
+:-webkit-full-screen .arcade-golden-panel strong {
+  font-size: clamp(3.8rem, 6vw, 7.6rem) !important;
+}
+
+.is-tv-fullscreen .arcade-golden-panel span,
+:fullscreen .arcade-golden-panel span,
+:-webkit-full-screen .arcade-golden-panel span {
+  font-size: clamp(1.2rem, 1.8vw, 2.2rem) !important;
+}
+
+.is-tv-fullscreen .arcade-footer,
+:fullscreen .arcade-footer,
+:-webkit-full-screen .arcade-footer {
+  flex: 0 0 auto !important;
+  margin-top: auto !important;
+  display: grid !important;
+  grid-template-columns: minmax(21rem, 0.8fr) minmax(22rem, 1fr) minmax(30rem, 34rem) !important;
+  align-items: end !important;
+  gap: clamp(1rem, 2vw, 2.6rem) !important;
+  width: 100% !important;
+  padding: 0 clamp(0.8rem, 1.5vw, 2rem) clamp(0.4rem, 0.8vw, 1rem) !important;
+}
+
+.is-tv-fullscreen .arcade-footer-brand img,
+:fullscreen .arcade-footer-brand img,
+:-webkit-full-screen .arcade-footer-brand img {
+  width: clamp(10rem, 12vw, 15.5rem) !important;
+}
+
+.is-tv-fullscreen .arcade-footer-brand span,
+:fullscreen .arcade-footer-brand span,
+:-webkit-full-screen .arcade-footer-brand span {
+  font-size: clamp(1.7rem, 2.2vw, 2.8rem) !important;
+}
+
+.is-tv-fullscreen .arcade-marquee,
+:fullscreen .arcade-marquee,
+:-webkit-full-screen .arcade-marquee {
+  font-size: clamp(1.25rem, 1.8vw, 2.2rem) !important;
+  align-self: end !important;
+}
+
+.is-tv-fullscreen .arcade-clock,
+:fullscreen .arcade-clock,
+:-webkit-full-screen .arcade-clock {
+  justify-items: end !important;
+  padding-right: 0 !important;
+}
+
+.is-tv-fullscreen .arcade-clock span,
+:fullscreen .arcade-clock span,
+:-webkit-full-screen .arcade-clock span {
+  font-size: clamp(1.45rem, 2vw, 2.55rem) !important;
+}
+
+.is-tv-fullscreen .arcade-clock strong,
+:fullscreen .arcade-clock strong,
+:-webkit-full-screen .arcade-clock strong {
+  min-width: 5.3ch !important;
+  font-size: clamp(7rem, 9vw, 11.5rem) !important;
+  line-height: 0.75 !important;
+}
+
+@media (max-aspect-ratio: 4 / 3) {
+  .is-tv-fullscreen .drink-board,
+  :fullscreen .drink-board,
+  :-webkit-full-screen .drink-board {
+    gap: clamp(2rem, 4vw, 5rem) !important;
+  }
+
+  .is-tv-fullscreen .category-heading h2,
+  :fullscreen .category-heading h2,
+  :-webkit-full-screen .category-heading h2 {
+    font-size: clamp(3.4rem, 5.4vw, 6.4rem) !important;
+  }
+
+  .is-tv-fullscreen .drink-name,
+  .is-tv-fullscreen .drink-price,
+  :fullscreen .drink-name,
+  :fullscreen .drink-price,
+  :-webkit-full-screen .drink-name,
+  :-webkit-full-screen .drink-price {
+    font-size: clamp(1.5rem, 2.1vw, 2.6rem) !important;
+  }
+}
