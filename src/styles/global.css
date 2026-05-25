@@ -1533,8 +1533,13 @@ body.home-body::after {
 .market-body.is-golden-mode .brand-logo,
 .market-body.is-golden-mode .arcade-logo {
   filter:
-    drop-shadow(0 0 0.55rem rgba(255, 226, 116, 0.95))
-    drop-shadow(0 0 1rem rgba(255, 177, 36, 0.75));
+    sepia(1)
+    saturate(2.35)
+    hue-rotate(350deg)
+    brightness(1.42)
+    drop-shadow(0 0 0.7rem rgba(255, 248, 192, 1))
+    drop-shadow(0 0 1.25rem rgba(255, 226, 116, 0.98))
+    drop-shadow(0 0 2.15rem rgba(255, 177, 36, 0.9));
 }
 
 /* Responsive final: evita desbordes en TV, escritorio, tablet y móvil. */
@@ -2028,18 +2033,23 @@ body.home-body::after {
 /* Bottom-left brand: larger clean logo, no black backing. */
 .arcade-footer-brand {
   align-items: center;
+  align-self: end;
+  justify-content: flex-start;
   gap: clamp(0.75rem, 1.2vw, 1.35rem);
-  min-height: clamp(9rem, 13vw, 16rem);
+  min-height: clamp(7.4rem, 10.5vw, 13.5rem);
+  overflow: visible;
 }
 
 .arcade-footer-brand img {
-  width: clamp(7rem, 9vw, 11rem);
+  width: clamp(8.2rem, 10.8vw, 13.2rem);
   background: transparent;
   filter:
-    drop-shadow(0 0 0.55rem rgba(255, 255, 255, 0.95))
-    drop-shadow(0 0 1rem rgba(53, 235, 255, 1))
-    drop-shadow(0 0 1.65rem rgba(255, 74, 211, 0.95))
-    drop-shadow(0 0 2.3rem rgba(53, 235, 255, 0.55));
+    drop-shadow(0 0 0.75rem rgba(255, 255, 255, 1))
+    drop-shadow(0 0 1.35rem rgba(53, 235, 255, 1))
+    drop-shadow(0 0 2rem rgba(255, 74, 211, 1))
+    drop-shadow(0 0 3rem rgba(53, 235, 255, 0.75));
+  transform: translateY(0.25rem);
+  animation: neon-logo-pulse 2.6s ease-in-out infinite;
 }
 
 .arcade-footer-brand span {
@@ -2053,13 +2063,13 @@ body.home-body::after {
 
 @media (max-width: 920px) {
   .arcade-footer-brand img {
-    width: clamp(5.8rem, 18vw, 7.2rem);
+    width: clamp(5.9rem, 19vw, 7.9rem);
   }
 }
 
 @media (max-width: 480px) {
   .arcade-footer-brand img {
-    width: 4.8rem;
+    width: 5rem;
   }
 
   .arcade-footer-brand span {
@@ -2192,7 +2202,7 @@ body.home-body::after {
 .is-tv-fullscreen .arcade-footer-brand img,
 :fullscreen .arcade-footer-brand img,
 :-webkit-full-screen .arcade-footer-brand img {
-  width: clamp(10rem, 12vw, 15.5rem) !important;
+  width: clamp(11rem, 13vw, 17rem) !important;
 }
 
 .is-tv-fullscreen .arcade-footer-brand span,
@@ -2249,5 +2259,31 @@ body.home-body::after {
   :-webkit-full-screen .drink-name,
   :-webkit-full-screen .drink-price {
     font-size: clamp(1.5rem, 2.1vw, 2.6rem) !important;
+  }
+}
+
+.market-body.is-golden-mode .arcade-footer-brand img {
+  animation: gold-logo-pulse 1.45s ease-in-out infinite;
+}
+
+@keyframes neon-logo-pulse {
+  0%,
+  100% {
+    transform: translateY(0.25rem) scale(1);
+  }
+
+  50% {
+    transform: translateY(0.25rem) scale(1.035);
+  }
+}
+
+@keyframes gold-logo-pulse {
+  0%,
+  100% {
+    transform: translateY(0.25rem) scale(1);
+  }
+
+  50% {
+    transform: translateY(0.25rem) scale(1.06);
   }
 }

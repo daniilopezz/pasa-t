@@ -227,3 +227,27 @@ Se podrían utilizar elementos visuales como:
 - Aviso especial para Golden Time.
 - Cuenta atrás visible y dinámica.
 - Diseño oscuro o tipo neón para encajar con el ambiente nocturno del local.
+
+---
+
+## 15. Estructura para despliegue en Vercel
+
+El proyecto está preparado como una web estática. Vercel debe usar:
+
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Página principal: `index.html`
+- Pantalla del mercado: `market.html`
+
+El archivo `vercel.json` ya deja esta configuración definida. También añade rutas limpias:
+
+- `/` carga la página principal.
+- `/market` carga la pantalla de precios.
+- `/mercado` carga la pantalla de precios.
+
+El script de build copia los archivos necesarios a `dist/`:
+
+- `index.html`
+- `market.html`
+- `src/`
+- `public/`
