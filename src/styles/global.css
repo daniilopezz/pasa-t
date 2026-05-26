@@ -434,6 +434,88 @@ noscript {
   opacity: 0.48;
 }
 
+.minute-controls {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, auto));
+  align-items: end;
+  gap: 0.55rem;
+}
+
+.minute-control {
+  display: grid;
+  min-width: 0;
+  gap: 0.28rem;
+  color: var(--cream);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.minute-stepper {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(3.8rem, 4.6rem) 2.25rem;
+  min-width: 0;
+  border: 1px solid rgba(52, 230, 255, 0.42);
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(2, 5, 16, 0.7);
+}
+
+.minute-step-button,
+.minute-input {
+  min-width: 0;
+  min-height: 2.25rem;
+  border: 0;
+  color: var(--cream);
+  background: transparent;
+  font: inherit;
+  font-weight: 900;
+  text-align: center;
+}
+
+.minute-step-button {
+  cursor: pointer;
+  color: var(--cyan);
+}
+
+.minute-step-button:disabled,
+.minute-input:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.minute-input {
+  border-inline: 1px solid rgba(52, 230, 255, 0.26);
+  -moz-appearance: textfield;
+}
+
+.minute-input::-webkit-outer-spin-button,
+.minute-input::-webkit-inner-spin-button {
+  margin: 0;
+  -webkit-appearance: none;
+}
+
+.sync-pill {
+  display: inline-flex;
+  min-height: 2.25rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(52, 230, 255, 0.42);
+  border-radius: 8px;
+  padding: 0.35rem 0.62rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.sync-shared {
+  border-color: rgba(57, 255, 106, 0.55);
+  color: #baffc9;
+}
+
 .drink-board {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1344,6 +1426,73 @@ body.home-body::after {
   opacity: 0.42;
 }
 
+.arcade-controls .minute-controls {
+  grid-template-columns: repeat(2, minmax(9.5rem, 12rem)) minmax(8.5rem, auto);
+  align-items: end;
+  gap: 0.55rem;
+}
+
+.arcade-controls .minute-control {
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.45rem rgba(53, 235, 255, 0.82);
+}
+
+.arcade-controls .minute-stepper {
+  grid-template-columns: 2.15rem minmax(3.6rem, 1fr) 2.15rem;
+  border: 2px solid #36eaff;
+  border-radius: 4px;
+  background: #1c00b7;
+  box-shadow:
+    inset 0 0 1rem rgba(255, 76, 214, 0.22),
+    0.12rem 0.12rem 0 #ff4dd5,
+    0 0 0.65rem rgba(53, 235, 255, 0.44);
+}
+
+.arcade-controls .minute-step-button,
+.arcade-controls .minute-input {
+  min-height: 2.2rem;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.45rem rgba(53, 235, 255, 0.82);
+}
+
+.arcade-controls .minute-step-button {
+  background: rgba(53, 235, 255, 0.08);
+}
+
+.arcade-controls .minute-input {
+  border-inline: 2px solid rgba(54, 234, 255, 0.72);
+}
+
+.arcade-controls .sync-pill {
+  min-height: 2.2rem;
+  border: 2px solid #36eaff;
+  border-radius: 4px;
+  color: #ffffff;
+  background: #1c00b7;
+  box-shadow:
+    inset 0 0 1rem rgba(255, 76, 214, 0.22),
+    0.12rem 0.12rem 0 #ff4dd5,
+    0 0 0.65rem rgba(53, 235, 255, 0.44);
+  font-family: var(--font-display);
+  font-size: 0.78rem;
+  text-shadow:
+    0.08em 0.08em 0 #ff4dd5,
+    0 0 0.45rem rgba(53, 235, 255, 0.82);
+}
+
+.arcade-controls .sync-shared {
+  border-color: #39ff6a;
+  color: #d9ffe1;
+}
+
 .arcade-schedule {
   color: #ffffff;
   font-size: 0.86rem;
@@ -1464,6 +1613,11 @@ body.home-body::after {
   }
 
   .arcade-controls .control-panel {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .arcade-controls .minute-controls {
     grid-template-columns: 1fr;
     width: 100%;
   }
@@ -1599,7 +1753,8 @@ body.home-body::after {
 .market-body .drink-row,
 .arcade-footer,
 .arcade-controls,
-.arcade-controls .control-panel {
+.arcade-controls .control-panel,
+.arcade-controls .minute-controls {
   min-width: 0;
   max-width: 100%;
 }
@@ -1867,6 +2022,11 @@ body.home-body::after {
   }
 
   .arcade-controls .control-panel {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .arcade-controls .minute-controls {
     grid-template-columns: 1fr;
     width: 100%;
   }

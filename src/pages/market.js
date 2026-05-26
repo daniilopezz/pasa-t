@@ -1,34 +1,36 @@
 import { renderControlPanel } from "../components/ControlPanel.js";
 import { renderDrinkBoard } from "../components/DrinkBoard.js";
-import {
-  GOLDEN_TIME_DURATION_MS,
-  PRICE_UPDATE_INTERVAL_MS,
-} from "../data/prices.js";
 import { formatTime } from "../utils/formatPrice.js";
 import { exitFullscreen, isFullscreen, toggleFullscreen } from "../utils/fullscreen.js";
 import {
-  generateNewPrices,
-  setAllPricesToGoldenTime,
-} from "../utils/priceEngine.js";
+  advanceMarketState,
+  applyMarketAction,
+  createFallbackMarketState,
+  getPriceUpdateIntervalMs,
+  initializeMarketState,
+  normalizeMarketState,
+} from "../utils/marketStateCore.js";
 import { loadState, saveState } from "../utils/storage.js";
 
 const STORAGE_KEY = "new-pasa-t-market-state-v1";
+const MARKET_STATE_API_URL = "/api/market-state";
+const SYNC_POLL_INTERVAL_MS = 1000;
+const REMOTE_RETRY_INTERVAL_MS = 5000;
 const GOLDEN_TIME_SOUND_PATH = "/public/sounds/soundreality-airhorn-fx-343682.mp3";
+const MINUTE_SETTINGS = new Set([
+  "priceUpdateIntervalMinutes",
+  "goldenTimeDurationMinutes",
+]);
 
-const fallbackState = {
-  isActive: false,
-  isGoldenTime: false,
-  prices: {},
-  lastMinimumUse: {},
-  nextUpdateAt: null,
-  goldenEndsAt: null,
-  scheduledGoldenAt: null,
-  preGoldenPrices: null,
-};
-
-let state = loadState(STORAGE_KEY, fallbackState);
+let state = initializeMarketState(
+  loadState(STORAGE_KEY, createFallbackMarketState()),
+  Date.now(),
+);
 let tickerId = null;
 let goldenTimeAudio = null;
+let remoteSyncMode = "checking";
+let remoteRequestInFlight = false;
+let lastRemoteAttemptAt = 0;
 
 const app = document.querySelector("#app");
 
@@ -37,63 +39,11 @@ document.body.classList.add("market-body");
 initialize();
 
 function initialize() {
-  normalizeState();
-  ensureInitialPrices();
-  resolveExpiredTimers();
-  bindFullscreenEvents();
-
-  if (state.isActive) {
-    startTicker();
-  }
-
-  render();
-}
-
-function normalizeState() {
-  state = {
-    ...fallbackState,
-    ...state,
-    prices: state.prices || {},
-    lastMinimumUse: state.lastMinimumUse || {},
-  };
-
-  if (!state.isActive) {
-    state.scheduledGoldenAt = null;
-  }
-}
-
-function ensureInitialPrices() {
-  if (Object.keys(state.prices).length > 0) {
-    return;
-  }
-
-  const generated = generateNewPrices({}, state.lastMinimumUse, Date.now());
-  state.prices = generated.prices;
-  state.lastMinimumUse = generated.lastMinimumUse;
   persistMarketState();
-}
-
-function resolveExpiredTimers() {
-  const now = Date.now();
-
-  if (state.isGoldenTime && state.goldenEndsAt && state.goldenEndsAt <= now) {
-    deactivateGoldenTime(now);
-    return;
-  }
-
-  if (
-    state.isActive &&
-    !state.isGoldenTime &&
-    state.scheduledGoldenAt &&
-    state.scheduledGoldenAt <= now
-  ) {
-    activateGoldenTime(now);
-    return;
-  }
-
-  if (state.isActive && !state.isGoldenTime && state.nextUpdateAt && state.nextUpdateAt <= now) {
-    generateNewPricesForBoard(now);
-  }
+  bindFullscreenEvents();
+  startTicker();
+  render();
+  void syncRemoteState({ force: true });
 }
 
 function bindFullscreenEvents() {
@@ -117,121 +67,97 @@ function handleFullscreenKeys(event) {
   });
 }
 
-function startSystem() {
+async function performMarketAction(action, payload = {}) {
+  if (action === "start-system" || action === "schedule-golden-time") {
+    unlockGoldenTimeSound();
+  }
+
+  const remoteState = await postRemoteAction(action, payload);
+
+  if (remoteState) {
+    applyIncomingState(remoteState);
+    return;
+  }
+
+  applyLocalAction(action, payload);
+}
+
+function applyLocalAction(action, payload = {}) {
+  applyIncomingState(applyMarketAction(state, action, payload, Date.now()));
+}
+
+async function postRemoteAction(action, payload = {}) {
+  try {
+    const response = await fetch(MARKET_STATE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action, payload }),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const body = await response.json();
+    remoteSyncMode = "shared";
+    lastRemoteAttemptAt = Date.now();
+    return body.state;
+  } catch {
+    remoteSyncMode = "local";
+    return null;
+  }
+}
+
+async function syncRemoteState({ force = false } = {}) {
   const now = Date.now();
-  const generated = generateNewPrices(state.prices, state.lastMinimumUse, now);
+  const retryInterval =
+    remoteSyncMode === "local" ? REMOTE_RETRY_INTERVAL_MS : SYNC_POLL_INTERVAL_MS;
 
-  state = {
-    ...state,
-    isActive: true,
-    isGoldenTime: false,
-    prices: generated.prices,
-    lastMinimumUse: generated.lastMinimumUse,
-    nextUpdateAt: now + PRICE_UPDATE_INTERVAL_MS,
-    goldenEndsAt: null,
-    scheduledGoldenAt: null,
-    preGoldenPrices: null,
-  };
-
-  startTicker();
-  persistMarketState();
-  render();
-}
-
-function stopSystem() {
-  state = {
-    ...state,
-    isActive: false,
-    isGoldenTime: false,
-    nextUpdateAt: null,
-    goldenEndsAt: null,
-    scheduledGoldenAt: null,
-    preGoldenPrices: null,
-  };
-
-  stopTicker();
-  persistMarketState();
-  render();
-}
-
-function generateNewPricesForBoard(now = Date.now()) {
-  const generated = generateNewPrices(state.prices, state.lastMinimumUse, now);
-
-  state = {
-    ...state,
-    prices: generated.prices,
-    lastMinimumUse: generated.lastMinimumUse,
-    nextUpdateAt: now + PRICE_UPDATE_INTERVAL_MS,
-  };
-
-  persistMarketState();
-}
-
-function scheduleGoldenTime() {
-  if (!state.isActive || state.isGoldenTime || state.scheduledGoldenAt) {
+  if (remoteRequestInFlight || (!force && now - lastRemoteAttemptAt < retryInterval)) {
     return;
   }
 
-  const now = Date.now();
-  const startsAt =
-    state.nextUpdateAt && state.nextUpdateAt > now
-      ? state.nextUpdateAt
-      : now + PRICE_UPDATE_INTERVAL_MS;
+  remoteRequestInFlight = true;
+  lastRemoteAttemptAt = now;
 
-  state = {
-    ...state,
-    scheduledGoldenAt: startsAt,
-  };
+  try {
+    const response = await fetch(MARKET_STATE_API_URL, {
+      cache: "no-store",
+    });
 
-  unlockGoldenTimeSound();
-  startTicker();
-  persistMarketState();
-  render();
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const body = await response.json();
+    remoteSyncMode = "shared";
+    applyIncomingState(body.state);
+  } catch {
+    if (remoteSyncMode !== "local") {
+      remoteSyncMode = "local";
+      render();
+    }
+  } finally {
+    remoteRequestInFlight = false;
+  }
 }
 
-function activateGoldenTime(now = Date.now()) {
-  if (!state.isActive || state.isGoldenTime) {
+function applyIncomingState(nextState, options = {}) {
+  if (!nextState) {
     return;
   }
 
-  state = {
-    ...state,
-    isGoldenTime: true,
-    prices: setAllPricesToGoldenTime(state.prices, now),
-    goldenEndsAt: now + GOLDEN_TIME_DURATION_MS,
-    scheduledGoldenAt: null,
-    preGoldenPrices: state.prices,
-  };
-
-  playGoldenTimeSound();
-  startTicker();
+  const wasGoldenTime = state.isGoldenTime;
+  state = normalizeMarketState(nextState);
   persistMarketState();
-  render();
-}
 
-function deactivateGoldenTime(now = Date.now()) {
-  if (!state.isGoldenTime) {
-    return;
+  if (!wasGoldenTime && state.isGoldenTime && options.playGoldenSound !== false) {
+    playGoldenTimeSound();
   }
 
-  const generated = generateNewPrices(
-    state.preGoldenPrices || state.prices,
-    state.lastMinimumUse,
-    now,
-  );
-
-  state = {
-    ...state,
-    isGoldenTime: false,
-    prices: generated.prices,
-    lastMinimumUse: generated.lastMinimumUse,
-    goldenEndsAt: null,
-    scheduledGoldenAt: null,
-    preGoldenPrices: null,
-    nextUpdateAt: state.isActive ? now + PRICE_UPDATE_INTERVAL_MS : null,
-  };
-
-  persistMarketState();
   render();
 }
 
@@ -289,25 +215,20 @@ function playGoldenTimeSound() {
 }
 
 function tick() {
-  const now = Date.now();
+  void syncRemoteState();
 
-  if (state.isGoldenTime && state.goldenEndsAt && state.goldenEndsAt <= now) {
-    deactivateGoldenTime(now);
+  if (remoteSyncMode === "shared") {
+    render();
     return;
   }
 
-  if (
-    state.isActive &&
-    !state.isGoldenTime &&
-    state.scheduledGoldenAt &&
-    state.scheduledGoldenAt <= now
-  ) {
-    activateGoldenTime(now);
-    return;
-  }
+  const nextState = advanceMarketState(state, Date.now());
+  const hasChanged =
+    nextState.revision !== state.revision || nextState.updatedAt !== state.updatedAt;
 
-  if (state.isActive && !state.isGoldenTime && state.nextUpdateAt && state.nextUpdateAt <= now) {
-    generateNewPricesForBoard(now);
+  if (hasChanged) {
+    applyIncomingState(nextState);
+    return;
   }
 
   render();
@@ -319,15 +240,6 @@ function startTicker() {
   }
 
   tickerId = window.setInterval(tick, 1000);
-}
-
-function stopTicker() {
-  if (!tickerId) {
-    return;
-  }
-
-  window.clearInterval(tickerId);
-  tickerId = null;
 }
 
 function persistMarketState() {
@@ -348,22 +260,10 @@ function getNextUpdateLabel() {
   }
 
   if (!state.isActive) {
-    return formatTime(PRICE_UPDATE_INTERVAL_MS / 1000);
+    return formatTime(getPriceUpdateIntervalMs(state) / 1000);
   }
 
   return formatTime(getRemainingSeconds(state.nextUpdateAt));
-}
-
-function getGoldenStatusLabel() {
-  if (state.isGoldenTime) {
-    return `Golden termina en ${formatTime(getRemainingSeconds(state.goldenEndsAt))}`;
-  }
-
-  if (state.scheduledGoldenAt && state.scheduledGoldenAt > Date.now()) {
-    return `Golden empieza en ${formatTime(getRemainingSeconds(state.scheduledGoldenAt))}`;
-  }
-
-  return state.isActive ? "Golden disponible" : "Golden en espera";
 }
 
 function getScheduledGoldenLabel() {
@@ -371,7 +271,11 @@ function getScheduledGoldenLabel() {
     return `Golden empieza en ${formatTime(getRemainingSeconds(state.scheduledGoldenAt))}`;
   }
 
-  return "Golden Time manual";
+  return state.isActive ? "Golden Time manual" : "Configura minutos y pulsa iniciar";
+}
+
+function getControlSyncStatus() {
+  return remoteSyncMode === "shared" ? "shared" : "local";
 }
 
 function render() {
@@ -423,7 +327,7 @@ function render() {
                   </div>
                   <img class="golden-panel-logo golden-panel-logo-right" src="/public/logo-clean.png" alt="" aria-hidden="true" />
                 </section>`
-            : ""
+              : ""
         }
 
         ${renderDrinkBoard({
@@ -449,6 +353,9 @@ function render() {
           isGoldenTime: state.isGoldenTime,
           isGoldenScheduled,
           isFullscreenActive: isFullscreen(),
+          priceUpdateIntervalMinutes: state.priceUpdateIntervalMinutes,
+          goldenTimeDurationMinutes: state.goldenTimeDurationMinutes,
+          syncStatus: getControlSyncStatus(),
         })}
         <span class="arcade-schedule">${getScheduledGoldenLabel()}</span>
       </aside>
@@ -461,14 +368,14 @@ function render() {
 function bindControlEvents() {
   app.querySelector('[data-action="toggle-system"]')?.addEventListener("click", () => {
     if (state.isActive) {
-      stopSystem();
+      void performMarketAction("stop-system");
     } else {
-      startSystem();
+      void performMarketAction("start-system");
     }
   });
 
   app.querySelector('[data-action="golden-time"]')?.addEventListener("click", () => {
-    scheduleGoldenTime();
+    void performMarketAction("schedule-golden-time");
   });
 
   app.querySelector('[data-action="fullscreen"]')?.addEventListener("click", async () => {
@@ -478,5 +385,46 @@ function bindControlEvents() {
     } catch (error) {
       console.warn("No se pudo cambiar el modo pantalla completa", error);
     }
+  });
+
+  app.querySelectorAll('[data-action="adjust-setting"]').forEach((button) => {
+    button.addEventListener("click", () => {
+      const setting = button.dataset.setting;
+
+      if (state.isActive || !MINUTE_SETTINGS.has(setting)) {
+        return;
+      }
+
+      const step = Number(button.dataset.step || 0);
+      const currentValue = Number(state[setting] || 0);
+      updateMinuteSettings({ [setting]: currentValue + step });
+    });
+  });
+
+  app.querySelectorAll("[data-setting-input]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const setting = input.dataset.settingInput;
+
+      if (state.isActive || !MINUTE_SETTINGS.has(setting)) {
+        return;
+      }
+
+      updateMinuteSettings({ [setting]: input.value });
+    });
+
+    input.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        input.blur();
+      }
+    });
+  });
+}
+
+function updateMinuteSettings(patch) {
+  void performMarketAction("update-settings", {
+    priceUpdateIntervalMinutes: state.priceUpdateIntervalMinutes,
+    goldenTimeDurationMinutes: state.goldenTimeDurationMinutes,
+    ...patch,
   });
 }
