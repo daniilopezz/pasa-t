@@ -8,5 +8,8 @@
     "dev": "python3 -m http.server 5174 --bind 127.0.0.1",
     "preview": "python3 -m http.server 4173 --bind 127.0.0.1 --directory dist",
     "start": "python3 -m http.server 5174 --bind 127.0.0.1"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^2.0.1"
   }
 }
