@@ -300,7 +300,9 @@ function render() {
     <main class="market-page arcade-page">
       <section class="arcade-screen" aria-label="Marcador de precios NEW PASA-T">
         <div class="arcade-topline">
-          <img class="arcade-logo" src="/public/logo.png" alt="NEW PASA-T" />
+          <span class="logo-fx logo-fx-arcade">
+            <img class="arcade-logo" src="/public/logo-clean.png" alt="NEW PASA-T" />
+          </span>
           <div class="arcade-title">
             <span>NEW PASA-T</span>
             <strong>DRINK MARKET</strong>
@@ -337,7 +339,9 @@ function render() {
 
         <footer class="arcade-footer">
           <div class="arcade-footer-brand">
-            <img src="/public/logo-neon-only.png" alt="" aria-hidden="true" />
+            <span class="logo-fx logo-fx-footer">
+              <img src="/public/logo-clean.png" alt="" aria-hidden="true" />
+            </span>
           </div>
 
           <div class="arcade-clock" aria-label="Cuenta atrás">

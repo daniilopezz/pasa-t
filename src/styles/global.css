@@ -110,6 +110,7 @@ noscript {
 }
 
 .brand-logo {
+  display: block;
   object-fit: contain;
   filter:
     drop-shadow(0 0 0.7rem rgba(66, 220, 255, 0.42))
@@ -125,6 +126,74 @@ noscript {
   width: 5.25rem;
   height: 5.25rem;
   flex: 0 0 auto;
+}
+
+.logo-fx {
+  position: relative;
+  isolation: isolate;
+  display: inline-grid;
+  place-items: center;
+  line-height: 0;
+  transform: translate3d(0, 0, 0);
+  animation: logo-fx-float 7.5s ease-in-out infinite;
+  filter: brightness(1.03) saturate(1.05);
+}
+
+.logo-fx::before,
+.logo-fx::after {
+  position: absolute;
+  pointer-events: none;
+  content: "";
+}
+
+.logo-fx::before {
+  z-index: 0;
+  inset: -18%;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 28% 24%, rgba(255, 255, 255, 0.34), transparent 12%),
+    radial-gradient(circle at 62% 50%, rgba(52, 230, 255, 0.34), transparent 42%),
+    radial-gradient(circle at 40% 70%, rgba(255, 71, 199, 0.3), transparent 46%);
+  opacity: 0.7;
+  filter: blur(0.42rem);
+  animation: logo-fx-halo 5.8s ease-in-out infinite;
+}
+
+.logo-fx::after {
+  z-index: 2;
+  inset: -8%;
+  background: linear-gradient(115deg, transparent 23%, rgba(255, 255, 255, 0.9) 45%, transparent 62%);
+  clip-path: polygon(32% 0, 54% 0, 70% 100%, 48% 100%);
+  mix-blend-mode: screen;
+  opacity: 0;
+  transform: translateX(-145%) skewX(-18deg);
+  animation: logo-fx-sweep 4.8s ease-in-out infinite;
+}
+
+.logo-fx > img {
+  position: relative;
+  z-index: 1;
+}
+
+.logo-fx-home {
+  width: min(20rem, 58%);
+  margin: 0 auto 1rem;
+}
+
+.logo-fx-home .brand-logo.large {
+  width: 100%;
+  margin: 0;
+}
+
+.logo-fx-lockup {
+  width: 5.25rem;
+  height: 5.25rem;
+  flex: 0 0 auto;
+}
+
+.logo-fx-lockup .brand-logo.small {
+  width: 100%;
+  height: 100%;
 }
 
 .home-page {
@@ -860,6 +929,11 @@ noscript {
     height: 4rem;
   }
 
+  .logo-fx-lockup {
+    width: 4rem;
+    height: 4rem;
+  }
+
   .brand-lockup h1 {
     font-size: 2rem;
   }
@@ -993,12 +1067,23 @@ body.home-body::after {
 }
 
 .arcade-logo {
+  display: block;
   width: 3.1rem;
   height: 3.1rem;
   object-fit: contain;
   filter:
     drop-shadow(0 0 0.45rem rgba(53, 235, 255, 0.85))
     drop-shadow(0 0 0.65rem rgba(255, 74, 211, 0.75));
+}
+
+.logo-fx-arcade {
+  width: 3.1rem;
+  height: 3.1rem;
+}
+
+.logo-fx-arcade .arcade-logo {
+  width: 100%;
+  height: 100%;
 }
 
 .arcade-title {
@@ -1730,6 +1815,17 @@ body.home-body::after {
     drop-shadow(0 0 2.15rem rgba(255, 177, 36, 0.9));
 }
 
+.market-body.is-golden-mode .logo-fx::before {
+  background:
+    radial-gradient(circle at 26% 22%, rgba(255, 255, 225, 0.52), transparent 14%),
+    radial-gradient(circle at 58% 46%, rgba(255, 226, 116, 0.44), transparent 42%),
+    radial-gradient(circle at 42% 72%, rgba(255, 153, 36, 0.36), transparent 46%);
+}
+
+.market-body.is-golden-mode .logo-fx::after {
+  background: linear-gradient(115deg, transparent 23%, rgba(255, 255, 210, 0.95) 45%, transparent 62%);
+}
+
 .market-body.is-golden-mode .arcade-footer-brand {
   display: none;
 }
@@ -2259,12 +2355,20 @@ body.home-body::after {
   width: clamp(8.2rem, 10.8vw, 13.2rem);
   background: transparent;
   filter:
+    brightness(2.35)
+    contrast(1.38)
+    saturate(1.7)
     drop-shadow(0 0 0.75rem rgba(255, 255, 255, 1))
-    drop-shadow(0 0 1.35rem rgba(53, 235, 255, 1))
-    drop-shadow(0 0 2rem rgba(255, 74, 211, 1))
-    drop-shadow(0 0 3rem rgba(53, 235, 255, 0.75));
+    drop-shadow(0 0 1.6rem rgba(53, 235, 255, 1))
+    drop-shadow(0 0 2.4rem rgba(255, 74, 211, 1))
+    drop-shadow(0 0 3.4rem rgba(53, 235, 255, 0.82));
   transform: translateY(0.25rem);
-  animation: neon-logo-pulse 2.6s ease-in-out infinite;
+}
+
+.logo-fx-footer::before {
+  inset: -24%;
+  opacity: 0.92;
+  filter: blur(0.62rem);
 }
 
 .arcade-footer-brand span {
@@ -2484,27 +2588,59 @@ body.home-body::after {
 }
 
 .market-body.is-golden-mode .arcade-footer-brand img {
-  animation: gold-logo-pulse 1.45s ease-in-out infinite;
+  transform: translateY(0.25rem);
 }
 
-@keyframes neon-logo-pulse {
+@keyframes logo-fx-float {
   0%,
   100% {
-    transform: translateY(0.25rem) scale(1);
+    transform: translate3d(0, 0, 0) rotate(-0.6deg);
   }
 
   50% {
-    transform: translateY(0.25rem) scale(1.035);
+    transform: translate3d(0, -0.18rem, 0) rotate(0.6deg);
   }
 }
 
-@keyframes gold-logo-pulse {
+@keyframes logo-fx-halo {
   0%,
   100% {
-    transform: translateY(0.25rem) scale(1);
+    opacity: 0.54;
+    transform: scale(0.96);
   }
 
   50% {
-    transform: translateY(0.25rem) scale(1.06);
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes logo-fx-sweep {
+  0%,
+  54% {
+    opacity: 0;
+    transform: translateX(-145%) skewX(-18deg);
+  }
+
+  62% {
+    opacity: 0.62;
+  }
+
+  74% {
+    opacity: 0;
+    transform: translateX(145%) skewX(-18deg);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(145%) skewX(-18deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-fx,
+  .logo-fx::before,
+  .logo-fx::after {
+    animation: none;
   }
 }

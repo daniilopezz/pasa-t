@@ -14,7 +14,9 @@ export function renderHeader({
   return `
     <header class="market-header">
       <a class="brand-lockup" href="/index.html" aria-label="Volver al inicio">
-        <img class="brand-logo small" src="/public/logo.png" alt="NEW PASA-T" />
+        <span class="logo-fx logo-fx-lockup">
+          <img class="brand-logo small" src="/public/logo-clean.png" alt="NEW PASA-T" />
+        </span>
         <div>
           <p class="eyebrow">NEW PASA-T</p>
           <h1>Mercado de bebidas</h1>

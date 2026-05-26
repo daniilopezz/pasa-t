@@ -6,7 +6,9 @@ app.innerHTML = `
   <main class="home-page">
     <section class="home-hero" aria-label="NEW PASA-T">
       <div class="home-brand">
-        <img class="brand-logo large" src="/public/logo.png" alt="NEW PASA-T" />
+        <span class="logo-fx logo-fx-home">
+          <img class="brand-logo large" src="/public/logo-clean.png" alt="NEW PASA-T" />
+        </span>
         <p class="eyebrow">Mercado nocturno de bebidas</p>
         <h1>NEW PASA-T</h1>
         <a class="primary-link" href="/market.html">Entrar al mercado</a>
