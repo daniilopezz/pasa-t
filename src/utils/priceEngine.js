@@ -3,6 +3,7 @@ import {
   ALLOWED_PRICES,
   GOLDEN_TIME_PRICE,
   POPULAR_MINIMUM_COOLDOWN_MS,
+  REGULAR_DRINK_PRICE,
   WEIGHTED_PRICE_TABLE,
   WEIGHTED_PRICE_TABLE_WITHOUT_MINIMUM,
 } from "../data/prices.js";
@@ -60,7 +61,7 @@ export function generateNewPrices(currentPrices = {}, lastMinimumUse = {}, now =
   for (const drinkName of getAllDrinkNames()) {
     const previousRecord = currentPrices[drinkName];
     const previousPrice =
-      typeof previousRecord?.current === "number" ? previousRecord.current : null;
+      typeof previousRecord?.current === "number" ? previousRecord.current : REGULAR_DRINK_PRICE;
     const generated = generatePriceForDrink(drinkName, minimumUseCursor, now);
 
     minimumUseCursor = generated.lastMinimumUse;
@@ -93,15 +94,18 @@ export function setAllPricesToGoldenTime(currentPrices = {}, now = Date.now()) {
 }
 
 export function getPriceMovement(previousPrice, currentPrice) {
-  if (typeof previousPrice !== "number" || typeof currentPrice !== "number") {
+  if (typeof currentPrice !== "number") {
     return "same";
   }
 
-  if (currentPrice > previousPrice) {
+  const referencePrice =
+    typeof previousPrice === "number" ? previousPrice : REGULAR_DRINK_PRICE;
+
+  if (currentPrice > referencePrice) {
     return "up";
   }
 
-  if (currentPrice < previousPrice) {
+  if (currentPrice < referencePrice) {
     return "down";
   }
 

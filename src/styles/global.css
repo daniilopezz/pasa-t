@@ -929,7 +929,6 @@ body.home-body::after {
 .arcade-title span,
 .arcade-status,
 .arcade-footer-brand,
-.arcade-marquee,
 .control-button,
 .arcade-schedule {
   font-family: var(--font-display);
@@ -1028,6 +1027,42 @@ body.home-body::after {
   margin-top: 0.18rem;
   font-size: clamp(1rem, 2.2vw, 2.35rem);
   text-transform: none;
+}
+
+.golden-panel-copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  padding-inline: clamp(5.5rem, 11vw, 12rem);
+}
+
+.golden-panel-logo {
+  position: absolute;
+  top: 50%;
+  z-index: 1;
+  width: clamp(4rem, 7vw, 8.25rem);
+  max-height: 82%;
+  object-fit: contain;
+  opacity: 0.94;
+  pointer-events: none;
+  transform: translateY(-50%);
+  filter:
+    sepia(1)
+    saturate(2.2)
+    hue-rotate(350deg)
+    brightness(1.42)
+    drop-shadow(0 0 0.65rem rgba(255, 248, 192, 1))
+    drop-shadow(0 0 1.1rem rgba(255, 226, 116, 0.95))
+    drop-shadow(0 0 1.8rem rgba(255, 177, 36, 0.78));
+}
+
+.golden-panel-logo-left {
+  left: clamp(0.85rem, 1.8vw, 2.2rem);
+}
+
+.golden-panel-logo-right {
+  right: clamp(0.85rem, 1.8vw, 2.2rem);
 }
 
 .arcade-golden-panel.golden-pending {
@@ -1185,7 +1220,7 @@ body.home-body::after {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(9rem, 0.85fr) minmax(26rem, 1.15fr) minmax(17rem, 17rem);
+  grid-template-columns: minmax(9rem, 1fr) minmax(17rem, 17rem);
   align-items: end;
   gap: 1rem;
   padding: 0.45rem 0.65rem 0;
@@ -1513,7 +1548,6 @@ body.home-body::after {
 .market-body.is-golden-mode .drink-price,
 .market-body.is-golden-mode .movement-badge span,
 .market-body.is-golden-mode .arcade-footer-brand,
-.market-body.is-golden-mode .arcade-marquee,
 .market-body.is-golden-mode .arcade-clock,
 .market-body.is-golden-mode .arcade-clock span,
 .market-body.is-golden-mode .arcade-clock strong,
@@ -1540,6 +1574,14 @@ body.home-body::after {
     drop-shadow(0 0 0.7rem rgba(255, 248, 192, 1))
     drop-shadow(0 0 1.25rem rgba(255, 226, 116, 0.98))
     drop-shadow(0 0 2.15rem rgba(255, 177, 36, 0.9));
+}
+
+.market-body.is-golden-mode .arcade-footer-brand {
+  display: none;
+}
+
+.market-body.is-golden-scheduled .arcade-footer-brand {
+  display: none;
 }
 
 /* Responsive final: evita desbordes en TV, escritorio, tablet y móvil. */
@@ -1638,13 +1680,18 @@ body.home-body::after {
   }
 
   .arcade-footer {
-    grid-template-columns: minmax(10rem, 0.72fr) minmax(18rem, 1fr) minmax(21rem, 25rem);
+    grid-template-columns: minmax(10rem, 1fr) minmax(21rem, 25rem);
     align-items: end;
     gap: clamp(0.8rem, 1.6vw, 1.5rem);
   }
 
   .arcade-marquee {
     width: min(100%, 30rem);
+  }
+
+  .market-body.is-golden-mode .arcade-clock,
+  .market-body.is-golden-scheduled .arcade-clock {
+    grid-column: 2;
   }
 
   .arcade-clock strong {
@@ -1687,7 +1734,7 @@ body.home-body::after {
   }
 
   .arcade-footer {
-    grid-template-columns: minmax(8rem, 0.7fr) minmax(16rem, 1fr) minmax(17rem, 21rem);
+    grid-template-columns: minmax(8rem, 1fr) minmax(17rem, 21rem);
   }
 
   .arcade-clock strong {
@@ -1793,6 +1840,14 @@ body.home-body::after {
   .arcade-golden-panel {
     min-height: auto;
     padding: clamp(0.55rem, 2.6vw, 0.85rem);
+  }
+
+  .golden-panel-copy {
+    padding-inline: clamp(3.6rem, 18vw, 5.5rem);
+  }
+
+  .golden-panel-logo {
+    width: clamp(2.9rem, 15vw, 4.2rem);
   }
 
   .arcade-golden-panel strong {
@@ -1931,7 +1986,7 @@ body.home-body::after {
 .is-tv-fullscreen .arcade-footer,
 :fullscreen .arcade-footer,
 :-webkit-full-screen .arcade-footer {
-  grid-template-columns: minmax(10rem, 0.7fr) minmax(18rem, 1fr) minmax(22rem, 26rem);
+  grid-template-columns: minmax(10rem, 1fr) minmax(22rem, 26rem);
 }
 
 .is-tv-fullscreen .arcade-clock strong,
@@ -2000,7 +2055,7 @@ body.home-body::after {
   }
 
   .arcade-footer {
-    grid-template-columns: minmax(9rem, 0.75fr) minmax(18rem, 1fr) minmax(18.5rem, 22rem);
+    grid-template-columns: minmax(9rem, 1fr) minmax(18.5rem, 22rem);
   }
 
   .arcade-footer-brand {
@@ -2022,7 +2077,7 @@ body.home-body::after {
 
 @media (min-width: 1501px) {
   .arcade-footer {
-    grid-template-columns: minmax(12rem, 0.72fr) minmax(22rem, 1fr) minmax(24rem, 29rem);
+    grid-template-columns: minmax(12rem, 1fr) minmax(24rem, 29rem);
   }
 
   .arcade-clock strong {
@@ -2186,13 +2241,19 @@ body.home-body::after {
   font-size: clamp(1.2rem, 1.8vw, 2.2rem) !important;
 }
 
+.is-tv-fullscreen .golden-panel-logo,
+:fullscreen .golden-panel-logo,
+:-webkit-full-screen .golden-panel-logo {
+  width: clamp(5.2rem, 7.6vw, 10rem) !important;
+}
+
 .is-tv-fullscreen .arcade-footer,
 :fullscreen .arcade-footer,
 :-webkit-full-screen .arcade-footer {
   flex: 0 0 auto !important;
   margin-top: auto !important;
   display: grid !important;
-  grid-template-columns: minmax(21rem, 0.8fr) minmax(22rem, 1fr) minmax(30rem, 34rem) !important;
+  grid-template-columns: minmax(21rem, 1fr) minmax(30rem, 34rem) !important;
   align-items: end !important;
   gap: clamp(1rem, 2vw, 2.6rem) !important;
   width: 100% !important;

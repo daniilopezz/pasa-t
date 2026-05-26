@@ -389,6 +389,7 @@ function render() {
       : "PULSA INICIAR";
 
   document.body.classList.toggle("is-golden-mode", state.isGoldenTime);
+  document.body.classList.toggle("is-golden-scheduled", Boolean(isGoldenScheduled));
   syncFullscreenMode();
 
   app.innerHTML = `
@@ -406,13 +407,21 @@ function render() {
         ${
           state.isGoldenTime
             ? `<section class="arcade-golden-panel" role="status" aria-live="polite">
-                <strong>GOLDEN TIME</strong>
-                <span>Todas las bebidas a 5,00 €</span>
+                <img class="golden-panel-logo golden-panel-logo-left" src="/public/logo-clean.png" alt="" aria-hidden="true" />
+                <div class="golden-panel-copy">
+                  <strong>GOLDEN TIME</strong>
+                  <span>Todas las bebidas a 5,00 €</span>
+                </div>
+                <img class="golden-panel-logo golden-panel-logo-right" src="/public/logo-clean.png" alt="" aria-hidden="true" />
               </section>`
             : isGoldenScheduled
               ? `<section class="arcade-golden-panel golden-pending" role="status" aria-live="polite">
-                  <strong>GOLDEN TIME</strong>
-                  <span>Empieza en ${formatTime(scheduledGoldenRemainingSeconds)}</span>
+                  <img class="golden-panel-logo golden-panel-logo-left" src="/public/logo-clean.png" alt="" aria-hidden="true" />
+                  <div class="golden-panel-copy">
+                    <strong>GOLDEN TIME</strong>
+                    <span>Empieza en ${formatTime(scheduledGoldenRemainingSeconds)}</span>
+                  </div>
+                  <img class="golden-panel-logo golden-panel-logo-right" src="/public/logo-clean.png" alt="" aria-hidden="true" />
                 </section>`
             : ""
         }
@@ -425,11 +434,6 @@ function render() {
         <footer class="arcade-footer">
           <div class="arcade-footer-brand">
             <img src="/public/logo-neon-only.png" alt="" aria-hidden="true" />
-          </div>
-
-          <div class="arcade-marquee">
-            <strong>${state.isGoldenTime ? "TODAS LAS BEBIDAS" : isGoldenScheduled ? "GOLDEN TIME PROGRAMADO" : "GOLDEN TIME MANUAL"}</strong>
-            <span>${state.isGoldenTime ? "5,00 €" : isGoldenScheduled ? "Próxima actualización" : getGoldenStatusLabel()}</span>
           </div>
 
           <div class="arcade-clock" aria-label="Cuenta atrás">

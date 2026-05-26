@@ -3,6 +3,7 @@ export const ALLOWED_PRICES = [4.5, 5, 5.2, 5.5, 5.7, 6, 6.5, 7, 7.5, 8];
 export const PRICE_UPDATE_INTERVAL_MS = 10 * 60 * 1000;
 export const GOLDEN_TIME_DURATION_MS = 5 * 60 * 1000;
 export const POPULAR_MINIMUM_COOLDOWN_MS = 60 * 60 * 1000;
+export const REGULAR_DRINK_PRICE = 6;
 export const GOLDEN_TIME_PRICE = 5;
 
 export const WEIGHTED_PRICE_TABLE = [
