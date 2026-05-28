@@ -29,8 +29,11 @@ function sleep(ms) {
 }
 
 function getRedisConfig() {
-  const url = process.env.UPSTASH_REDIS_REST_URL?.replace(/\/+$/, "");
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
+  const rawUrl =
+    process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  const url = rawUrl?.replace(/\/+$/, "");
 
   return url && token ? { url, token } : null;
 }
