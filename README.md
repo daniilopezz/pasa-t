@@ -251,3 +251,19 @@ El script de build copia los archivos necesarios a `dist/`:
 - `market.html`
 - `src/`
 - `public/`
+
+### Sincronizacion movil/ordenador en Vercel
+
+Para que el movil y el ordenador compartan exactamente el mismo estado en Vercel,
+la API `/api/market-state` necesita un almacenamiento compartido. En local usa
+`.data/market-state.json`, pero en Vercel debe usar Upstash Redis.
+
+Configura estas variables en el proyecto de Vercel:
+
+- `UPSTASH_REDIS_REST_URL`
+- `UPSTASH_REDIS_REST_TOKEN`
+- `PASA_T_MARKET_STATE_KEY` opcional, por defecto `new-pasa-t:market-state:v1`
+
+Si las variables de Upstash no estan configuradas en Vercel, la API devuelve un
+error `sync_storage_not_configured` para evitar que el sistema funcione en modo
+local sin sincronizacion real.

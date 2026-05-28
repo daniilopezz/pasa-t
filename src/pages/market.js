@@ -14,7 +14,7 @@ import { loadState, saveState } from "../utils/storage.js";
 
 const STORAGE_KEY = "new-pasa-t-market-state-v1";
 const MARKET_STATE_API_URL = "/api/market-state";
-const SYNC_POLL_INTERVAL_MS = 1000;
+const SYNC_POLL_INTERVAL_MS = 750;
 const REMOTE_RETRY_INTERVAL_MS = 5000;
 const GOLDEN_TIME_SOUND_PATH = "/public/sounds/soundreality-airhorn-fx-343682.mp3";
 const MINUTE_SETTINGS = new Set([
@@ -22,9 +22,12 @@ const MINUTE_SETTINGS = new Set([
   "goldenTimeDurationMinutes",
 ]);
 
+let serverTimeOffsetMs = 0;
+let hasServerClock = false;
+let hasPendingLocalState = false;
 let state = initializeMarketState(
   loadState(STORAGE_KEY, createFallbackMarketState()),
-  Date.now(),
+  getCurrentTime(),
 );
 let tickerId = null;
 let goldenTimeAudio = null;
@@ -50,6 +53,13 @@ function bindFullscreenEvents() {
   document.addEventListener("fullscreenchange", syncFullscreenMode);
   document.addEventListener("webkitfullscreenchange", syncFullscreenMode);
   document.addEventListener("keydown", handleFullscreenKeys);
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+      void syncRemoteState({ force: true });
+    }
+  });
+  window.addEventListener("focus", () => void syncRemoteState({ force: true }));
+  window.addEventListener("online", () => void syncRemoteState({ force: true }));
 }
 
 function syncFullscreenMode() {
@@ -83,10 +93,13 @@ async function performMarketAction(action, payload = {}) {
 }
 
 function applyLocalAction(action, payload = {}) {
-  applyIncomingState(applyMarketAction(state, action, payload, Date.now()));
+  hasPendingLocalState = true;
+  applyIncomingState(applyMarketAction(state, action, payload, getCurrentTime()));
 }
 
 async function postRemoteAction(action, payload = {}) {
+  const requestedAt = Date.now();
+
   try {
     const response = await fetch(MARKET_STATE_API_URL, {
       method: "POST",
@@ -102,8 +115,40 @@ async function postRemoteAction(action, payload = {}) {
     }
 
     const body = await response.json();
+    updateServerClock(body.serverNow, requestedAt, Date.now());
     remoteSyncMode = "shared";
     lastRemoteAttemptAt = Date.now();
+    hasPendingLocalState = false;
+    return body.state;
+  } catch {
+    remoteSyncMode = "local";
+    return null;
+  }
+}
+
+async function replaceRemoteState(nextState) {
+  const requestedAt = Date.now();
+
+  try {
+    const response = await fetch(MARKET_STATE_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ action: "replace-state", state: nextState }),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const body = await response.json();
+    updateServerClock(body.serverNow, requestedAt, Date.now());
+    remoteSyncMode = "shared";
+    lastRemoteAttemptAt = Date.now();
+    hasPendingLocalState = false;
+    applyIncomingState(body.state);
     return body.state;
   } catch {
     remoteSyncMode = "local";
@@ -124,6 +169,7 @@ async function syncRemoteState({ force = false } = {}) {
   lastRemoteAttemptAt = now;
 
   try {
+    const requestedAt = Date.now();
     const response = await fetch(MARKET_STATE_API_URL, {
       cache: "no-store",
     });
@@ -133,8 +179,23 @@ async function syncRemoteState({ force = false } = {}) {
     }
 
     const body = await response.json();
+    updateServerClock(body.serverNow, requestedAt, Date.now());
+    const incomingState = normalizeMarketState(body.state);
     remoteSyncMode = "shared";
-    applyIncomingState(body.state);
+
+    if (hasPendingLocalState && isStateNewer(state, incomingState)) {
+      const replacedState = await replaceRemoteState(state);
+
+      if (replacedState) {
+        return;
+      }
+
+      render();
+      return;
+    }
+
+    hasPendingLocalState = false;
+    applyIncomingState(incomingState);
   } catch {
     if (remoteSyncMode !== "local") {
       remoteSyncMode = "local";
@@ -159,6 +220,33 @@ function applyIncomingState(nextState, options = {}) {
   }
 
   render();
+}
+
+function updateServerClock(serverNow, requestedAt, receivedAt) {
+  const numericServerNow = Number(serverNow);
+
+  if (!Number.isFinite(numericServerNow) || numericServerNow <= 0) {
+    return;
+  }
+
+  const estimatedClientNow = requestedAt + (receivedAt - requestedAt) / 2;
+  serverTimeOffsetMs = numericServerNow - estimatedClientNow;
+  hasServerClock = true;
+}
+
+function getCurrentTime() {
+  return Date.now() + (hasServerClock ? serverTimeOffsetMs : 0);
+}
+
+function isStateNewer(candidateState, currentState) {
+  const candidate = normalizeMarketState(candidateState);
+  const current = normalizeMarketState(currentState);
+
+  if (candidate.updatedAt && current.updatedAt) {
+    return candidate.updatedAt > current.updatedAt;
+  }
+
+  return candidate.revision > current.revision;
 }
 
 function getGoldenTimeAudio() {
@@ -222,11 +310,12 @@ function tick() {
     return;
   }
 
-  const nextState = advanceMarketState(state, Date.now());
+  const nextState = advanceMarketState(state, getCurrentTime());
   const hasChanged =
     nextState.revision !== state.revision || nextState.updatedAt !== state.updatedAt;
 
   if (hasChanged) {
+    hasPendingLocalState = true;
     applyIncomingState(nextState);
     return;
   }
@@ -251,7 +340,7 @@ function getRemainingSeconds(targetTimestamp) {
     return 0;
   }
 
-  return Math.max(0, Math.ceil((targetTimestamp - Date.now()) / 1000));
+  return Math.max(0, Math.ceil((targetTimestamp - getCurrentTime()) / 1000));
 }
 
 function getNextUpdateLabel() {
@@ -267,7 +356,7 @@ function getNextUpdateLabel() {
 }
 
 function getScheduledGoldenLabel() {
-  if (state.scheduledGoldenAt && state.scheduledGoldenAt > Date.now()) {
+  if (state.scheduledGoldenAt && state.scheduledGoldenAt > getCurrentTime()) {
     return `Golden empieza en ${formatTime(getRemainingSeconds(state.scheduledGoldenAt))}`;
   }
 
@@ -279,9 +368,10 @@ function getControlSyncStatus() {
 }
 
 function render() {
+  const now = getCurrentTime();
   const goldenRemainingSeconds = getRemainingSeconds(state.goldenEndsAt);
   const isGoldenScheduled =
-    !state.isGoldenTime && state.scheduledGoldenAt && state.scheduledGoldenAt > Date.now();
+    !state.isGoldenTime && state.scheduledGoldenAt && state.scheduledGoldenAt > now;
   const scheduledGoldenRemainingSeconds = getRemainingSeconds(state.scheduledGoldenAt);
   const mainClockLabel = state.isGoldenTime
     ? formatTime(goldenRemainingSeconds)

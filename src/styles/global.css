@@ -2591,6 +2591,65 @@ body.home-body::after {
   transform: translateY(0.25rem);
 }
 
+/* Bebidas y precios: estilo limpio para marcas como Barcelo, Ballantines, etc. */
+.market-body .drink-name {
+  color: #f7fbff;
+  font-family: "Avenir Next Condensed", "Roboto Condensed", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 800;
+  line-height: 0.98;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 0.08em 0.12em rgba(0, 0, 0, 0.5);
+}
+
+.market-body .drink-price {
+  color: #ffffff;
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  font-weight: 900;
+  -webkit-text-stroke: 0;
+  text-shadow: 0 0.08em 0.12em rgba(0, 0, 0, 0.5);
+}
+
+.market-body .movement-up .drink-price,
+.market-body .movement-down .drink-price,
+.market-body .movement-same .drink-price,
+.market-body .golden-price .drink-price {
+  color: #ffffff;
+  text-shadow: none;
+}
+
+.market-body.is-golden-mode .arcade-golden-panel {
+  color: #050505;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.16) 1px, transparent 1px),
+    linear-gradient(180deg, #ffd956, #f5b619);
+  background-size: 100% 5px, auto;
+}
+
+.market-body.is-golden-mode .category-heading h2,
+.market-body.is-golden-mode .drink-name,
+.market-body.is-golden-mode .drink-price,
+.market-body.is-golden-mode .movement-badge span,
+.market-body.is-golden-mode .arcade-footer-brand,
+.market-body.is-golden-mode .arcade-clock,
+.market-body.is-golden-mode .arcade-clock span,
+.market-body.is-golden-mode .arcade-clock strong,
+.market-body.is-golden-mode .arcade-golden-panel,
+.market-body.is-golden-mode .arcade-golden-panel strong,
+.market-body.is-golden-mode .arcade-golden-panel span,
+.market-body.is-golden-mode .arcade-golden-panel em {
+  color: #050505;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+
+.market-body.is-golden-mode .golden-panel-logo,
+.market-body.is-golden-mode .arcade-footer-brand img,
+.market-body.is-golden-mode .brand-logo,
+.market-body.is-golden-mode .arcade-logo {
+  filter: brightness(0);
+}
+
 @keyframes logo-fx-float {
   0%,
   100% {
